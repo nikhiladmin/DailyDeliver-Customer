@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">DailyDeliver</string>
+    <string name="Login_description">Your number is safe with us. We won\'t share any details with anyone.</string>
+    <string name="customers">Customers</string>
+    <string name="get_started">Get Started</string>
 </resources>
