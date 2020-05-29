@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.daytoday.customer.dailydelivery.BlankActivity;
+import com.daytoday.customer.dailydelivery.HomeScreenActivity;
 import com.daytoday.customer.dailydelivery.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -179,7 +180,7 @@ public class OtpVerification extends AppCompatActivity {
 
     public void SendUserHomePage(){
         Log.i("msg","this");
-        Intent loginIntent=new Intent(OtpVerification.this, BlankActivity.class);
+        Intent loginIntent=new Intent(OtpVerification.this, HomeScreenActivity.class);
         loginIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(loginIntent);
         finish();
@@ -249,14 +250,14 @@ public class OtpVerification extends AppCompatActivity {
                         String tempotp = "1111";
                         Log.e(TAG, "afterTextChanged: "+ e3 );
                         Log.i("msg","here1");
-                        Intent intent = new Intent(OtpVerification.this, BlankActivity.class);
+                        Intent intent = new Intent(OtpVerification.this, HomeScreenActivity.class);
                         startActivity(intent);
                         finish();
                     }
                     break;
                 default:
                     Log.i("msg","here2");
-                    Intent intent = new Intent(OtpVerification.this, BlankActivity.class);
+                    Intent intent = new Intent(OtpVerification.this, HomeScreenActivity.class);
                     startActivity(intent);
                     finish();
             }
