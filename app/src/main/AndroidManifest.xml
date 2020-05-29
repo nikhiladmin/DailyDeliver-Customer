@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/SplashTheme">
+        <activity android:name=".HomeScreenActivity"></activity>
         <activity android:name=".WalkThrough.WalkThroughActivity" />
         <activity android:name=".LoginActivity.LoginPage" />
         <activity android:name=".LoginActivity.OtpVerification" />

@@ -10,6 +10,7 @@ import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.daytoday.customer.dailydelivery.BlankActivity;
+import com.daytoday.customer.dailydelivery.HomeScreenActivity;
 import com.daytoday.customer.dailydelivery.R;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -77,7 +78,7 @@ public class PhoneVerification extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser!=null){
             Log.i("msg","here3");
-            Intent loginIntent=new Intent(PhoneVerification.this, BlankActivity.class);
+            Intent loginIntent=new Intent(PhoneVerification.this, HomeScreenActivity.class);
             loginIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             loginIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(loginIntent);
