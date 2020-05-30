@@ -13,15 +13,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
     List<Product> buss_list;
     Context context;
+    FirebaseUser currUser = FirebaseAuth.getInstance().getCurrentUser();
 
     public ProductAdapter(List<Product> buss_list, Context context) {
         this.buss_list = buss_list;
         this.context = context;
+        currUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     @NonNull
@@ -43,6 +48,15 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse("tel:"+buss_list.get(position).getPhoneNo()));
                 v.getContext().startActivity(intent);
+            }
+        });
+        holder.buss_status_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(),CalenderActivity.class);
+                intent.putExtra("buisness-Id",buss_list.get(position).getId());
+                intent.putExtra("Customer-Id",currUser.getUid());
+                context.startActivity(intent);
             }
         });
     }

@@ -1,14 +1,14 @@
 package com.daytoday.customer.dailydelivery;
 
-public class Product {
-    private String productName, MonthDay;
+public class Product {    private String productName, MonthDay;
     private String price;
     private String image;
     private String cust_cout;
     private String PhoneNo;
     private String Address;
+    private String Id;
 
-    public Product(String productName, String monthDay, String price, String image, String cust_cout, String phoneNo, String address) {
+    public Product(String productName, String monthDay, String price, String image, String cust_cout, String phoneNo, String address, String id) {
         this.productName = productName;
         MonthDay = monthDay;
         this.price = price;
@@ -16,6 +16,7 @@ public class Product {
         this.cust_cout = cust_cout;
         PhoneNo = phoneNo;
         Address = address;
+        Id = id;
     }
 
     public String getProductName() {
@@ -72,5 +73,13 @@ public class Product {
 
     public void setAddress(String address) {
         Address = address;
+    }
+
+    public String getId() {
+        return Id;
+    }
+
+    public void setId(String id) {
+        Id = id;
     }
 }
