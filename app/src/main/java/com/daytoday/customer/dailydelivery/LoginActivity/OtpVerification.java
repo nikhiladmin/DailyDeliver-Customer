@@ -140,7 +140,7 @@ public class OtpVerification extends AppCompatActivity {
         data.put("Name",name);
         data.put("PhoneNo",currentUser.getPhoneNumber());
         data.put("Address","RB II 671 / D A Road");
-        firestore.collection("Buss-User-Info").document(currentUser.getUid()).set(data);
+        firestore.collection("Cust-User-Info").document(currentUser.getUid()).set(data);
     }
 
     @Override
