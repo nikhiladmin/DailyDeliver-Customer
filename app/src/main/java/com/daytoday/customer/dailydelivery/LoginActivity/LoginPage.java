@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 import com.daytoday.customer.dailydelivery.BlankActivity;
-import com.daytoday.customer.dailydelivery.HomeScreenActivity;
 import com.daytoday.customer.dailydelivery.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,7 +31,7 @@ public class LoginPage extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        getSupportActionBar().hide();
+        
 
         phoneLogin = findViewById(R.id.btn1);
         googleLogin = findViewById(R.id.btn2);
@@ -55,7 +54,7 @@ public class LoginPage extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser!=null){
             Log.i("msg","here4");
-            Intent loginIntent=new Intent(LoginPage.this, HomeScreenActivity.class);
+            Intent loginIntent=new Intent(LoginPage.this, BlankActivity.class);
             loginIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             loginIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(loginIntent);
