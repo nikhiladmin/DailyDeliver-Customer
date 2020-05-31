@@ -36,11 +36,9 @@ public class PhoneVerification extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        getSupportActionBar().hide();
+
         ccp=findViewById(R.id.ccp);
-
         send_otp=findViewById(R.id.send_otp);
-
         phoneNo=findViewById(R.id.editText_carrierNumber);
         first =findViewById(R.id.firstName);
         last  =findViewById(R.id.lastName);
