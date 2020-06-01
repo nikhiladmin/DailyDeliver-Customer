@@ -1,25 +1,26 @@
 package com.daytoday.customer.dailydelivery;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
 public class HomeScreenActivity extends AppCompatActivity {
-    TabLayout tabLayout;
-    ViewPager pager;
-    FloatingActionButton floatingActionButton;
-    private int[] tabIcons = {
-            R.drawable.ic_product_black_24dp,
-            R.drawable.ic_center_focus_strong_black_24dp,
-            R.drawable.ic_add_alert_black_24dp,
-            R.drawable.ic_profile_black_24dp
-    };
+
+
+    private BottomAppBar bottomAppBar;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,45 +30,59 @@ public class HomeScreenActivity extends AppCompatActivity {
 
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
-        tabLayout = findViewById(R.id.bottomTabLayout);
-        pager = findViewById(R.id.switchFragment);
-        floatingActionButton = findViewById(R.id.fab);
-        BottomTabAdapter adapter = new BottomTabAdapter(getSupportFragmentManager(),this,tabLayout.getTabCount());
-        pager.setAdapter(adapter);
-        pager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                if (tab.getPosition() != 2)
-                    pager.setCurrentItem(tab.getPosition());
-            }
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+        bottomAppBar = findViewById(R.id.bottomBar);
+        setSupportActionBar(bottomAppBar);
 
-            }
 
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
 
-            }
-        });
 
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pager.setCurrentItem(2);
-            }
-        });
-        setupTabIcons();
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.bottom_menu, menu);
+        return true;
     }
 
 
-    private void setupTabIcons() {
-        tabLayout.getTabAt(0).setIcon(tabIcons[0]);
-        tabLayout.getTabAt(1).setIcon(tabIcons[1]);
-        tabLayout.getTabAt(3).setIcon(tabIcons[2]);
-        tabLayout.getTabAt(4).setIcon(tabIcons[3]);
-    }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id==R.id.myproducts)
+        {
+            Intent intent = new Intent(HomeScreenActivity.this,ProductFragment.class);
+            //getSupportFragmentManager().beginTransaction().replace();
+            startActivity(intent);
+            finish();
+            return true;
+        }
+        if (id==R.id.scan)
+        {
+            Intent intent = new Intent(HomeScreenActivity.this,ScanFragment.class);
+            startActivity(intent);
+            finish();
+            return true;
+        }
+        if (id==R.id.notification)
+        {
+            Intent intent = new Intent(HomeScreenActivity.this,NotificationFragment.class);
+            startActivity(intent);
+            finish();
+            return true;
+        }
+        if (id==R.id.myprofile)
+        {
+            Intent intent = new Intent(HomeScreenActivity.this,UserFragment.class);
+            startActivity(intent);
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
+
+
