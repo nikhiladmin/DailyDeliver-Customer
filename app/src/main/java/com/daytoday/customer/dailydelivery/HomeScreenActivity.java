@@ -54,31 +54,23 @@ public class HomeScreenActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id==R.id.myproducts)
         {
-            Intent intent = new Intent(HomeScreenActivity.this,ProductFragment.class);
-            //getSupportFragmentManager().beginTransaction().replace();
-            startActivity(intent);
-            finish();
+            getSupportFragmentManager().beginTransaction().replace(R.id.switchFragment,new ProductFragment()).commit();
+            //finish();
             return true;
         }
         if (id==R.id.scan)
         {
-            Intent intent = new Intent(HomeScreenActivity.this,ScanFragment.class);
-            startActivity(intent);
-            finish();
+            getSupportFragmentManager().beginTransaction().replace(R.id.switchFragment,new SearchFragment()).commit();
             return true;
         }
         if (id==R.id.notification)
         {
-            Intent intent = new Intent(HomeScreenActivity.this,NotificationFragment.class);
-            startActivity(intent);
-            finish();
+            getSupportFragmentManager().beginTransaction().replace(R.id.switchFragment,new NotificationFragment()).commit();
             return true;
         }
         if (id==R.id.myprofile)
         {
-            Intent intent = new Intent(HomeScreenActivity.this,UserFragment.class);
-            startActivity(intent);
-            finish();
+            getSupportFragmentManager().beginTransaction().replace(R.id.switchFragment,new UserFragment()).commit();
             return true;
         }
         return super.onOptionsItemSelected(item);
