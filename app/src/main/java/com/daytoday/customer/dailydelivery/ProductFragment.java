@@ -1,5 +1,6 @@
 package com.daytoday.customer.dailydelivery;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -25,14 +26,20 @@ public class ProductFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_product, container, false);
         product_list = view.findViewById(R.id.product_list);
+        ProgressDialog progressDialog;
+        progressDialog=new ProgressDialog(getActivity());
+        progressDialog.setMessage("Please wait loading");
+        progressDialog.setCancelable(false);
         product_list.setHasFixedSize(true);
         product_list.setLayoutManager(new LinearLayoutManager(getContext()));
         ProductViewModel viewModel = new ProductViewModel();
+        progressDialog.show();
         viewModel.getProduct().observe(this, new Observer<List<Product>>() {
             @Override
             public void onChanged(List<Product> products) {
                 ProductAdapter adapter = new ProductAdapter(products,getContext());
                 product_list.setAdapter(adapter);
+                progressDialog.dismiss();
             }
         });
         return view;
