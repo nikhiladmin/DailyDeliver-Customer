@@ -19,6 +19,7 @@ public class HomeScreenActivity extends AppCompatActivity {
 
 
     private BottomAppBar bottomAppBar;
+    private FloatingActionButton floatingActionButton;
 
 
 
@@ -32,13 +33,21 @@ public class HomeScreenActivity extends AppCompatActivity {
 
 
         bottomAppBar = findViewById(R.id.bottomBar);
+        floatingActionButton = findViewById(R.id.fab);
         setSupportActionBar(bottomAppBar);
 
-
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.switchFragment,new SearchFragment()).commit();
+            }
+        });
 
 
 
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -60,7 +69,7 @@ public class HomeScreenActivity extends AppCompatActivity {
         }
         if (id==R.id.scan)
         {
-            getSupportFragmentManager().beginTransaction().replace(R.id.switchFragment,new SearchFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.switchFragment,new ScanFragment()).commit();
             return true;
         }
         if (id==R.id.notification)
