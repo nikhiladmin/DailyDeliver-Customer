@@ -40,8 +40,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         holder.buss_name.setText(buss_list.get(position).getProductName());
         holder.buss_add.setText(buss_list.get(position).getAddress());
-        holder.price.setText(buss_list.get(position).getPrice() + " /" +buss_list.get(position).getMonthDay());
-        holder.customers.setText("( " + buss_list.get(position).getCust_cout() + " Customers )");
+        holder.price.setText("Rs. "+buss_list.get(position).getPrice() + " - " +buss_list.get(position).getMonthDay());
+       // holder.customers.setText("( " + buss_list.get(position).getCust_cout() + " Customers )");
         holder.call_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,7 +74,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             super(itemView);
             buss_add = itemView.findViewById(R.id.buss_address);
             price = itemView.findViewById(R.id.price);
-            customers = itemView.findViewById(R.id.customers);
+            //customers = itemView.findViewById(R.id.customers);
             buss_name = itemView.findViewById(R.id.buss_name);
             buss_img = itemView.findViewById(R.id.buss_img);
             buss_status_btn = itemView.findViewById(R.id.buss_status_btn);
