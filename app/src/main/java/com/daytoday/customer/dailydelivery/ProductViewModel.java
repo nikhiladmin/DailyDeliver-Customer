@@ -14,8 +14,7 @@ public class ProductViewModel extends ViewModel {
         this.productRepo = new ProductRepo();
     }
 
-    public LiveData<List<Product>> getProduct()
-    {
+    public LiveData<List<Product>> getProduct() {
         liveData = productRepo.requestProduct();
         return liveData;
     }
