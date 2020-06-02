@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -37,7 +38,7 @@ public class AddProductAdapter extends RecyclerView.Adapter<AddProductAdapter.Ad
     @Override
     public void onBindViewHolder(@NonNull AddProductViewHolder holder, int position) {
         holder.id.setText(list.get(position));
-        holder.layout.setOnClickListener(new View.OnClickListener() {
+        holder.materialCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AddBuisness(list.get(position));
@@ -59,11 +60,11 @@ public class AddProductAdapter extends RecyclerView.Adapter<AddProductAdapter.Ad
 
     public class AddProductViewHolder extends RecyclerView.ViewHolder {
         TextView id;
-        LinearLayout layout;
+        MaterialCardView materialCardView;
         public AddProductViewHolder(@NonNull View itemView) {
             super(itemView);
             id = itemView.findViewById(R.id.product_id);
-            layout = itemView.findViewById(R.id.layout);
+            materialCardView = itemView.findViewById(R.id.searchcardview);
         }
     }
 }
