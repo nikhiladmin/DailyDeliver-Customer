@@ -20,7 +20,7 @@ public class DatesRepo {
     public MutableLiveData<List<CalendarDay>> requestPendingList(String bussId,String custId) {
         MutableLiveData<List<CalendarDay>> liveData = new MutableLiveData<>();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        reference.child("Buss-Cust-DayWise").child(bussId).child(custId).child("Pending")
+        reference.child("Buss_Cust_DayWise").child(bussId).child(custId).child("Pending")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -52,7 +52,7 @@ public class DatesRepo {
     public MutableLiveData<List<CalendarDay>> requestAcceptedList(String bussId,String custId) {
         MutableLiveData<List<CalendarDay>> liveData = new MutableLiveData<>();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        reference.child("Buss-Cust-DayWise").child(bussId).child(custId).child("Accepted")
+        reference.child("Buss_Cust_DayWise").child(bussId).child(custId).child("Accepted")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -84,7 +84,7 @@ public class DatesRepo {
     public MutableLiveData<List<CalendarDay>> requestCancelledList(String bussId,String custId) {
         MutableLiveData<List<CalendarDay>> liveData = new MutableLiveData<>();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        reference.child("Buss-Cust-DayWise").child(bussId).child(custId).child("Rejected")
+        reference.child("Buss_Cust_DayWise").child(bussId).child(custId).child("Rejected")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

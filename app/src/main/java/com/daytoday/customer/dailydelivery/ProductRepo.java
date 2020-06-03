@@ -32,7 +32,7 @@ public class ProductRepo {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         //-----------------------------------------Initialise Here ---------------------------------
 
-        reference.child("Cust-Buss-Rel").child(currUser.getUid()).addValueEventListener(new ValueEventListener() {
+        reference.child("Cust_Buss_Rel").child(currUser.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Iterator iterator = dataSnapshot.getChildren().iterator();
@@ -40,15 +40,15 @@ public class ProductRepo {
                 while (iterator.hasNext())
                 {
                     DataSnapshot currentSnapshot = (DataSnapshot) iterator.next();
-                   firestore.collection("Buss-Info").document(currentSnapshot.getKey())
+                   firestore.collection("Buss_Info").document(currentSnapshot.getKey())
                            .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                                @Override
                                public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                                    String productName = documentSnapshot.get("Name").toString();
-                                   String MonthDay = documentSnapshot.get("M-Or-D").toString();
+                                   String MonthDay = documentSnapshot.get("M_Or_D").toString();
                                    String price = documentSnapshot.get("Price").toString();
                                    //String image = documentSnapshot.get("").toString();
-                                   String cust_cout = documentSnapshot.get("No-Of-Cust").toString();
+                                   String cust_cout = documentSnapshot.get("No_Of_Cust").toString();
                                    String PhoneNo = documentSnapshot.get("PhoneNo").toString();
                                    String Address = documentSnapshot.get("Address").toString();
                                    list.add(new Product(productName,MonthDay,price,"google.com",cust_cout,PhoneNo,Address,currentSnapshot.getKey()));

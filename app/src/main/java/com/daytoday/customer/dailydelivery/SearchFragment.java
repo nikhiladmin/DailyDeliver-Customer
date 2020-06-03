@@ -34,7 +34,7 @@ public class SearchFragment extends Fragment {
         recyclerView = view.findViewById(R.id.products);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        firestore.collection("Buss-Info").addSnapshotListener(new EventListener<QuerySnapshot>() {
+        firestore.collection("Buss_Info").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 Iterator iterator = queryDocumentSnapshots.getDocuments().iterator();
@@ -42,7 +42,6 @@ public class SearchFragment extends Fragment {
                 while (iterator.hasNext())
                 {
                     QueryDocumentSnapshot snapshots =(QueryDocumentSnapshot) iterator.next();
-                    Log.i("msg",snapshots.getId());
                     list.add(snapshots.getId());
                 }
                 AddProductAdapter addProductAdapter = new AddProductAdapter(getContext(),list);
