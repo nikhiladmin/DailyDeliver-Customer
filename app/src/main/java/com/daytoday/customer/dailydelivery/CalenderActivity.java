@@ -82,7 +82,6 @@ public class CalenderActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<CalendarDay> dates) {
                 CircleDecorator decorator = new CircleDecorator(CalenderActivity.this,R.drawable.pending_color,dates);
-                Log.i("msg","called");
                 calendarView.addDecorator(decorator);
             }
         });
@@ -97,7 +96,7 @@ public class CalenderActivity extends AppCompatActivity {
         value.put("Mon", String.valueOf(day.getMonth()));
         value.put("Day", String.valueOf(day.getDay()));
 
-        reference.child("Buss-Cust-DayWise").child(bussID).child(custID).child("Pending")
+        reference.child("Buss_Cust_DayWise").child(bussID).child(custID).child("Pending")
                 .child(currDate)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -106,7 +105,7 @@ public class CalenderActivity extends AppCompatActivity {
                         {
                             String quantity = dataSnapshot.child("quantity").getValue().toString();
                             value.put("quantity",quantity);
-                            reference.child("Buss-Cust-DayWise").child(bussID).child(custID).child("Rejected")
+                            reference.child("Buss_Cust_DayWise").child(bussID).child(custID).child("Rejected")
                                     .child(currDate).setValue(value);
                         }
                     }
@@ -116,7 +115,9 @@ public class CalenderActivity extends AppCompatActivity {
 
                     }
                 });
-        reference.child("Buss-Cust-DayWise").child(bussID).child(custID).child("Pending")
+        reference.child("Buss_Cust_DayWise").child(bussID).child(custID).child("Pending")
+                .child(currDate).removeValue();
+        reference.child("Buss_Cust_DayWise").child(bussID).child(custID).child("Accepted")
                 .child(currDate).removeValue();
     }
 
@@ -129,7 +130,7 @@ public class CalenderActivity extends AppCompatActivity {
         value.put("Mon", String.valueOf(day.getMonth()));
         value.put("Day", String.valueOf(day.getDay()));
 
-        reference.child("Buss-Cust-DayWise").child(bussID).child(custID).child("Pending")
+        reference.child("Buss_Cust_DayWise").child(bussID).child(custID).child("Pending")
                 .child(currDate)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -138,7 +139,7 @@ public class CalenderActivity extends AppCompatActivity {
                         {
                             String quantity = dataSnapshot.child("quantity").getValue().toString();
                             value.put("quantity",quantity);
-                            reference.child("Buss-Cust-DayWise").child(bussID).child(custID).child("Accepted")
+                            reference.child("Buss_Cust_DayWise").child(bussID).child(custID).child("Accepted")
                                     .child(currDate).setValue(value);
                         }
                     }
@@ -148,7 +149,9 @@ public class CalenderActivity extends AppCompatActivity {
 
                     }
                 });
-        reference.child("Buss-Cust-DayWise").child(bussID).child(custID).child("Pending")
+        reference.child("Buss_Cust_DayWise").child(bussID).child(custID).child("Pending")
+                .child(currDate).removeValue();
+        reference.child("Buss_Cust_DayWise").child(bussID).child(custID).child("Rejected")
                 .child(currDate).removeValue();
     }
 

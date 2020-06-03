@@ -49,8 +49,8 @@ public class AddProductAdapter extends RecyclerView.Adapter<AddProductAdapter.Ad
     private void AddBuisness(String id) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         FirebaseUser currentuser = FirebaseAuth.getInstance().getCurrentUser();
-        reference.child("Buss-Cust-Rel").child(id).child(currentuser.getUid()).setValue(true);
-        reference.child("Cust-Buss-Rel").child(currentuser.getUid()).child(id).setValue(true);
+        reference.child("Buss_Cust_Rel").child(id).child(currentuser.getUid()).setValue(true);
+        reference.child("Cust_Buss_Rel").child(currentuser.getUid()).child(id).setValue(true);
     }
 
     @Override
