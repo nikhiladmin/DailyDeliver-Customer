@@ -1,8 +1,14 @@
 package com.daytoday.customer.dailydelivery;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -10,6 +16,14 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 public class HomeScreenActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -58,11 +72,67 @@ public class HomeScreenActivity extends AppCompatActivity implements BottomNavig
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.scan_business:
-                Toast.makeText(this, "To be Added soon", Toast.LENGTH_SHORT).show();
+                startActivityForResult(new Intent(HomeScreenActivity.this,ScanActivity.class),1);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data != null) {
+            Log.i("msg",data.getStringExtra("Answer"));
+            check(data.getStringExtra("Answer"));
+        }
+    }
+
+    private void check(String Uid) {
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore.collection("Buss_Info").document(Uid)
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                        Log.i("msg", String.valueOf(documentSnapshot.exists()));
+                        if (documentSnapshot.exists())
+                        {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(HomeScreenActivity.this);
+                            builder.setTitle("Add Business").setMessage("Do You Want To Add " + documentSnapshot.get("Name") + " Business");
+                            builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    AddBuisness(Uid);
+                                }
+                            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            });
+                            builder.show();
+                        }
+                        else
+                        {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(HomeScreenActivity.this);
+                            builder.setTitle("Wrong QR Code").setMessage("You Had Scanned Wrong QR-Code");
+                            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            });
+                            builder.show();
+                        }
+                    }
+                });
+    }
+
+    private void AddBuisness(String id) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        FirebaseUser currentuser = FirebaseAuth.getInstance().getCurrentUser();
+        reference.child("Buss_Cust_Rel").child(id).child(currentuser.getUid()).setValue(true);
+        reference.child("Cust_Buss_Rel").child(currentuser.getUid()).child(id).setValue(true);
     }
 }
 
