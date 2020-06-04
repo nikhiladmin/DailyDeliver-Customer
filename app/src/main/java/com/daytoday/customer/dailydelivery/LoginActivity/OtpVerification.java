@@ -61,6 +61,8 @@ public class OtpVerification extends AppCompatActivity {
         setContentView(R.layout.activity_verification_activity);
 
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        getSupportActionBar().hide();
+
 
 
         mAuth = FirebaseAuth.getInstance();

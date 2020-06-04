@@ -9,7 +9,6 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.daytoday.customer.dailydelivery.BlankActivity;
 import com.daytoday.customer.dailydelivery.HomeScreenActivity;
 import com.daytoday.customer.dailydelivery.R;
 import com.google.android.material.snackbar.Snackbar;
@@ -36,6 +35,8 @@ public class PhoneVerification extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        getSupportActionBar().hide();
+
 
         ccp=findViewById(R.id.ccp);
         send_otp=findViewById(R.id.send_otp);

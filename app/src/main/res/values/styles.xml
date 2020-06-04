@@ -13,4 +13,11 @@
         <item name="colorControlNormal">@color/colorLightGray</item>
         <item name="colorControlActivated">@color/colorPrimary</item>
     </style>
+
+    <style name="SplashTheme.NoActionBarNavBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="elevation">0dp</item> <!-- This line is for matching the actionbar with toolbar-->
+    </style>
+
 </resources>

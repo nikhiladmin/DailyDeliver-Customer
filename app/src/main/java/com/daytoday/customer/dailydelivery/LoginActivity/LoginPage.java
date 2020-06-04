@@ -32,6 +32,7 @@ public class LoginPage extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        getSupportActionBar().hide();
         
 
         phoneLogin = findViewById(R.id.btn1);
