@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -40,21 +42,21 @@ public class ProductRepo {
                 while (iterator.hasNext())
                 {
                     DataSnapshot currentSnapshot = (DataSnapshot) iterator.next();
-                   firestore.collection("Buss_Info").document(currentSnapshot.getKey())
-                           .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                               @Override
-                               public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                                   String productName = documentSnapshot.get("Name").toString();
-                                   String MonthDay = documentSnapshot.get("M_Or_D").toString();
-                                   String price = documentSnapshot.get("Price").toString();
-                                   //String image = documentSnapshot.get("").toString();
-                                   String cust_cout = documentSnapshot.get("No_Of_Cust").toString();
-                                   String PhoneNo = documentSnapshot.get("PhoneNo").toString();
-                                   String Address = documentSnapshot.get("Address").toString();
-                                   list.add(new Product(productName,MonthDay,price,"google.com",cust_cout,PhoneNo,Address,currentSnapshot.getKey()));
-                                   mutableLiveData.setValue(list);
-                               }
-                           });
+                   firestore.collection("Buss_Info").document(currentSnapshot.getKey()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                       @Override
+                       public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                           DocumentSnapshot documentSnapshot = task.getResult();
+                           String productName = documentSnapshot.get("Name").toString();
+                           String MonthDay = documentSnapshot.get("M_Or_D").toString();
+                           String price = documentSnapshot.get("Price").toString();
+                           String image = documentSnapshot.get("productImg").toString();
+                           String cust_cout = documentSnapshot.get("No_Of_Cust").toString();
+                           String PhoneNo = documentSnapshot.get("PhoneNo").toString();
+                           String Address = documentSnapshot.get("Address").toString();
+                           list.add(new Product(productName,MonthDay,price,image,cust_cout,PhoneNo,Address,currentSnapshot.getKey()));
+                           mutableLiveData.setValue(list);
+                       }
+                   });
                 }
             }
 
