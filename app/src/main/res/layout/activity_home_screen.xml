@@ -6,18 +6,60 @@
     android:layout_height="match_parent"
     tools:context=".HomeScreenActivity">
 
-    <FrameLayout
-        android:id="@+id/switchFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:elevation="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/switchFragment"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_menu" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="0dp"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar_home"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/colorPrimary"
+                android:elevation="0dp"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:layout_width="110dp"
+                        android:layout_height="?attr/actionBarSize"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/logo_launcher" />
+
+                </RelativeLayout>
+            </com.google.android.material.appbar.MaterialToolbar>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <FrameLayout
+            android:id="@+id/switchFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/appbar_layout"
+            android:layout_above="@id/bottom_navigation"
+            />
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="10dp"
+            android:layout_alignParentBottom="true"
+            app:menu="@menu/bottom_menu" />
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
