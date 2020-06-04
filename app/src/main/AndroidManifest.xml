@@ -11,7 +11,11 @@
         android:theme="@style/SplashTheme">
         <activity android:name=".ScanActivity"></activity>
         <activity android:name=".CalenderActivity" />
-        <activity android:name=".HomeScreenActivity" />
+        <activity
+            android:name=".HomeScreenActivity"
+            android:theme="@style/SplashTheme.NoActionBarNavBar"
+            android:windowSoftInputMode="adjustPan"
+            />
         <activity android:name=".WalkThrough.WalkThroughActivity" />
         <activity android:name=".LoginActivity.LoginPage" />
         <activity android:name=".LoginActivity.OtpVerification" />

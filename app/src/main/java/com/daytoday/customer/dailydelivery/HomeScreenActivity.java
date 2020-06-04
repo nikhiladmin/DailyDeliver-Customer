@@ -3,6 +3,7 @@ package com.daytoday.customer.dailydelivery;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -28,7 +29,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 public class HomeScreenActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     BottomNavigationView bottomNavigationView;
-
+    Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +37,8 @@ public class HomeScreenActivity extends AppCompatActivity implements BottomNavig
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        toolbar=findViewById(R.id.toolbar_home);
+        setSupportActionBar(toolbar);
         if(savedInstanceState==null)
         {
             getSupportFragmentManager().beginTransaction().replace(R.id.switchFragment, new ProductFragment()).commit();
