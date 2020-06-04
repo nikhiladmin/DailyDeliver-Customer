@@ -98,7 +98,7 @@ public class CalenderActivity extends AppCompatActivity {
 
         reference.child("Buss_Cust_DayWise").child(bussID).child(custID).child("Pending")
                 .child(currDate)
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.getValue() != null)
@@ -117,8 +117,6 @@ public class CalenderActivity extends AppCompatActivity {
                 });
         reference.child("Buss_Cust_DayWise").child(bussID).child(custID).child("Pending")
                 .child(currDate).removeValue();
-        reference.child("Buss_Cust_DayWise").child(bussID).child(custID).child("Accepted")
-                .child(currDate).removeValue();
     }
 
     private void SendToAccept(CalendarDay day,String bussID,String custID) {
@@ -132,7 +130,7 @@ public class CalenderActivity extends AppCompatActivity {
 
         reference.child("Buss_Cust_DayWise").child(bussID).child(custID).child("Pending")
                 .child(currDate)
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.getValue() != null)

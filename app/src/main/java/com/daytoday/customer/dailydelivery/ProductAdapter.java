@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -42,6 +43,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         holder.buss_add.setText(buss_list.get(position).getAddress());
         holder.price.setText("Rs. "+buss_list.get(position).getPrice() + " - " +buss_list.get(position).getMonthDay());
        // holder.customers.setText("( " + buss_list.get(position).getCust_cout() + " Customers )");
+        Picasso.get()
+                .load(buss_list.get(position).getImage())
+                .resize(5000,5000)
+                .centerCrop()
+                .into(holder.buss_img);
         holder.call_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
