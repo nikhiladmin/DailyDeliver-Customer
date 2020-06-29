@@ -8,6 +8,7 @@
     >
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/producardview"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="2dp"
@@ -105,21 +106,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/buss_name"
                 app:layout_constraintVertical_bias="0.0" />
 
-            <!--com.google.android.material.textview.MaterialTextView
-                android:id="@+id/customers"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginLeft="15dp"
-                android:gravity="center_horizontal"
-                android:textAlignment="center"
-                android:textSize="15sp"
-                android:text="hello world"
-                app:layout_constraintBottom_toTopOf="@+id/guideline4"
-                app:layout_constraintStart_toStartOf="@+id/guideline5"
-                app:layout_constraintTop_toBottomOf="@+id/buss_address"
-                app:layout_constraintVertical_bias="0.0" /-->
-
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/price"
                 android:layout_width="wrap_content"
@@ -136,19 +122,6 @@
                 app:layout_constraintStart_toStartOf="@+id/guideline5"
                 app:layout_constraintTop_toBottomOf="@+id/buss_address"
                 app:layout_constraintVertical_bias="0.0" />
-
-            <Button
-                android:id="@+id/buss_status_btn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_medium"
-                android:text="Status"
-                android:textAllCaps="false"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/guideline2"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/guideline4"
-                app:layout_constraintVertical_bias="1.0" />
 
             <ImageView
                 android:id="@+id/call_buss_btn"
