@@ -1,4 +1,4 @@
-package com.daytoday.customer.dailydelivery;
+package com.daytoday.customer.dailydelivery.HomeScreen.Model;
 
 public class Product {    private String productName, MonthDay;
     private String price;

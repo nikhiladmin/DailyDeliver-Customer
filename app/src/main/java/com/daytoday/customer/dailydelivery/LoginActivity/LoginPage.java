@@ -9,8 +9,7 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 
-import com.daytoday.customer.dailydelivery.BlankActivity;
-import com.daytoday.customer.dailydelivery.HomeScreenActivity;
+import com.daytoday.customer.dailydelivery.HomeScreen.View.HomeScreenActivity;
 import com.daytoday.customer.dailydelivery.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

@@ -9,7 +9,7 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.daytoday.customer.dailydelivery.HomeScreenActivity;
+import com.daytoday.customer.dailydelivery.HomeScreen.View.HomeScreenActivity;
 import com.daytoday.customer.dailydelivery.R;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;

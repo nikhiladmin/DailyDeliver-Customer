@@ -9,10 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/SplashTheme">
-        <activity android:name=".ScanActivity"></activity>
-        <activity android:name=".CalenderActivity" />
+        <activity android:name=".HomeScreen.View.ScanActivity"></activity>
+        <activity android:name=".HomeScreen.View.CalenderActivity" />
         <activity
-            android:name=".HomeScreenActivity"
+            android:name=".HomeScreen.View.HomeScreenActivity"
             android:theme="@style/SplashTheme.NoActionBarNavBar"
             android:windowSoftInputMode="adjustPan"
             />
@@ -21,7 +21,7 @@
         <activity android:name=".LoginActivity.OtpVerification" />
         <activity android:name=".LoginActivity.PhoneVerification" />
         <activity android:name=".BlankActivity" />
-        <activity android:name=".SplashScreenActivity">
+        <activity android:name=".WalkThrough.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
