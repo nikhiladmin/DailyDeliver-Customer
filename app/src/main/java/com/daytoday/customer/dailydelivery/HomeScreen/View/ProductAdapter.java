@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.daytoday.customer.dailydelivery.HomeScreen.Model.Product;
 import com.daytoday.customer.dailydelivery.R;
+import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
@@ -58,7 +59,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                 v.getContext().startActivity(intent);
             }
         });
-        holder.buss_status_btn.setOnClickListener(new View.OnClickListener() {
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(),CalenderActivity.class);
@@ -78,6 +79,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         Button buss_status_btn;
         TextView buss_name,buss_add,price,customers;
         ImageView buss_img,call_img;
+        MaterialCardView cardView;
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
             buss_add = itemView.findViewById(R.id.buss_address);
@@ -85,8 +87,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             //customers = itemView.findViewById(R.id.customers);
             buss_name = itemView.findViewById(R.id.buss_name);
             buss_img = itemView.findViewById(R.id.buss_img);
-            buss_status_btn = itemView.findViewById(R.id.buss_status_btn);
             call_img = itemView.findViewById(R.id.call_buss_btn);
+            cardView=itemView.findViewById(R.id.producardview);
         }
     }
 }
