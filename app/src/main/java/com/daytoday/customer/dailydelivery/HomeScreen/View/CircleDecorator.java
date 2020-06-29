@@ -1,4 +1,4 @@
-package com.daytoday.customer.dailydelivery;
+package com.daytoday.customer.dailydelivery.HomeScreen.View;
 
 import android.content.Context;
 import android.graphics.Color;

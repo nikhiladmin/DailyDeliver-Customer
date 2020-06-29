@@ -1,4 +1,4 @@
-package com.daytoday.customer.dailydelivery;
+package com.daytoday.customer.dailydelivery.HomeScreen.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,8 +14,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
+import com.daytoday.customer.dailydelivery.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -75,7 +75,7 @@ public class HomeScreenActivity extends AppCompatActivity implements BottomNavig
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.scan_business:
-                startActivityForResult(new Intent(HomeScreenActivity.this,ScanActivity.class),1);
+                startActivityForResult(new Intent(HomeScreenActivity.this, ScanActivity.class),1);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
