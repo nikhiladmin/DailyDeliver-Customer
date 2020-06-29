@@ -1,4 +1,4 @@
-package com.daytoday.customer.dailydelivery;
+package com.daytoday.customer.dailydelivery.HomeScreen.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -7,11 +7,9 @@ import androidx.lifecycle.Observer;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.util.Log;
-import android.widget.NumberPicker;
 
-import com.google.android.gms.common.util.ScopeUtil;
+import com.daytoday.customer.dailydelivery.HomeScreen.ViewModel.DatesViewModel;
+import com.daytoday.customer.dailydelivery.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -24,7 +22,6 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 public class CalenderActivity extends AppCompatActivity {

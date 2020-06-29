@@ -1,4 +1,4 @@
-package com.daytoday.customer.dailydelivery;
+package com.daytoday.customer.dailydelivery.WalkThrough;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +7,7 @@ import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.daytoday.customer.dailydelivery.WalkThrough.WalkThroughActivity;
+import com.daytoday.customer.dailydelivery.R;
 
 public class SplashScreenActivity extends AppCompatActivity {
     private static int SPLASH_SCREEN_TIME = 3000; /*This is the Splash screen time which is 3 seconds*/

@@ -1,4 +1,4 @@
-package com.daytoday.customer.dailydelivery;
+package com.daytoday.customer.dailydelivery.HomeScreen.View;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.daytoday.customer.dailydelivery.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
