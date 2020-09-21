@@ -21,7 +21,12 @@ import android.widget.Toast;
 
 import com.chaos.view.PinView;
 import com.daytoday.customer.dailydelivery.HomeScreenActivity;
+import com.daytoday.customer.dailydelivery.Network.ApiInterface;
+import com.daytoday.customer.dailydelivery.Network.Client;
+import com.daytoday.customer.dailydelivery.Network.Response.YesNoResponse;
 import com.daytoday.customer.dailydelivery.R;
+import com.daytoday.customer.dailydelivery.Utilities.AppConstants;
+import com.daytoday.customer.dailydelivery.Utilities.SaveOfflineManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
@@ -40,10 +45,15 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class OtpVerification extends AppCompatActivity {
     private PinView pinView;
     static final String TAG="verification_activity";
     private String phone;
+    private ApiInterface apiInterface;
     private FirebaseAuth mAuth;
     private TextView textTimer;
     private int time=60;  //Time OUT resend OTP
@@ -64,7 +74,7 @@ public class OtpVerification extends AppCompatActivity {
         getSupportActionBar().hide();
 
 
-
+        apiInterface = Client.getClient().create(ApiInterface.class);
         mAuth = FirebaseAuth.getInstance();
         pinView=findViewById(R.id.firstPinView);
         textTimer = findViewById(R.id.timer);
@@ -136,13 +146,29 @@ public class OtpVerification extends AppCompatActivity {
     }
 
     private void createUserProfile(String name) {
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        HashMap<String,String> data = new HashMap<>();
-        data.put("Name",name);
-        data.put("PhoneNo",currentUser.getPhoneNumber());
-        data.put("Address","RB II 671 / D A Road");
-        firestore.collection("Cust_User_Info").document(currentUser.getUid()).set(data);
+        String PhoneNo = currentUser.getPhoneNumber();
+        String address = "RB II 671 / D A Road";
+        saveOffline(currentUser,name,address);
+        Call<YesNoResponse> custUserDetails = apiInterface.addCustUserDetails(currentUser.getUid(),name,PhoneNo,address);
+        custUserDetails.enqueue(new Callback<YesNoResponse>() {
+            @Override
+            public void onResponse(Call<YesNoResponse> call, Response<YesNoResponse> response) {
+                Log.i("message","Response Successful " + response.body().getMessage());
+            }
+
+            @Override
+            public void onFailure(Call<YesNoResponse> call, Throwable t) {
+                Log.i(AppConstants.ERROR_LOG,"Some Error Occurred in OtpVerification Error is : {" + t.getMessage() + " }");
+            }
+        });
+    }
+
+    private void saveOffline(FirebaseUser currentUser, String name, String adress) {
+        SaveOfflineManager.setUserName(this,name);
+        SaveOfflineManager.setUserId(this,currentUser.getUid());
+        SaveOfflineManager.setUserAdress(this,adress);
+        SaveOfflineManager.setUserPhoneNumber(this,currentUser.getPhoneNumber());
     }
 
     @Override
