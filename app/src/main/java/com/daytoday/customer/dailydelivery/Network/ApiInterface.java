@@ -1,9 +1,6 @@
 package com.daytoday.customer.dailydelivery.Network;
 
-import com.daytoday.customer.dailydelivery.Network.Response.BussDetailsResponse;
-import com.daytoday.customer.dailydelivery.Network.Response.BussRelCustResponse;
-import com.daytoday.customer.dailydelivery.Network.Response.DayWiseResponse;
-import com.daytoday.customer.dailydelivery.Network.Response.YesNoResponse;
+import com.daytoday.customer.dailydelivery.Network.Response.*;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -31,8 +28,8 @@ public interface ApiInterface {
     @GET("fetch-buss-list")
     Call<BussDetailsResponse> getBussList(@Query("bussid") String bussId);
 
-    @GET("fetch-rel-cust")
-    Call<BussRelCustResponse> getRelCust(@Query("bussid") String bussId);
+    @GET("fetch-rel-buss")
+    Call<CustRelBussResponse> getRelBuss(@Query("custid") String custId);
 
     @GET("update-buss-details")
     Call<YesNoResponse> updateBussDetails(@Query("name") String name, @Query("phone") String phone

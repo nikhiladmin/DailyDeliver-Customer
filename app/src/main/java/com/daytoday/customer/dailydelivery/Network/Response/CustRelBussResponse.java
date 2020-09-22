@@ -1,19 +1,19 @@
 package com.daytoday.customer.dailydelivery.Network.Response;
 
-import com.daytoday.business.dailydelivery.MainHomeScreen.Model.Customers;
+import com.daytoday.customer.dailydelivery.Product;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class BussRelCustResponse {
+public class CustRelBussResponse {
 
     @SerializedName("error")
     @Expose
     private Boolean error;
     @SerializedName("cust")
     @Expose
-    private List<Customers> custumers = null;
+    private List<Product> cust = null;
 
     public Boolean getError() {
         return error;
@@ -23,11 +23,11 @@ public class BussRelCustResponse {
         this.error = error;
     }
 
-    public List<Customers> getCustumers() {
-        return custumers;
+    public List<Product> getCust() {
+        return cust;
     }
 
-    public void setCust(List<Customers> cust) {
-        this.custumers = cust;
+    public void setCust(List<Product> cust) {
+        this.cust = cust;
     }
 }

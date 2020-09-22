@@ -39,28 +39,31 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
-        holder.buss_name.setText(buss_list.get(position).getProductName());
+        holder.buss_name.setText(buss_list.get(position).getName());
         holder.buss_add.setText(buss_list.get(position).getAddress());
-        holder.price.setText("Rs. "+buss_list.get(position).getPrice() + " - " +buss_list.get(position).getMonthDay());
+        holder.price.setText("Rs. "+buss_list.get(position).getPrice() + " - " +buss_list.get(position).getDOrM());
        // holder.customers.setText("( " + buss_list.get(position).getCust_cout() + " Customers )");
-        Picasso.get()
-                .load(buss_list.get(position).getImage())
-                .resize(5000,5000)
-                .centerCrop()
-                .into(holder.buss_img);
-        holder.call_img.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:"+buss_list.get(position).getPhoneNo()));
-                v.getContext().startActivity(intent);
-            }
-        });
+        if (buss_list.get(position).getImgurl()!=null) {
+            Picasso.get()
+                    .load(buss_list.get(position).getImgurl())
+                    .resize(5000, 5000)
+                    .centerCrop()
+                    .into(holder.buss_img);
+            holder.call_img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse("tel:" + buss_list.get(position).getPhoneno()));
+                    v.getContext().startActivity(intent);
+                }
+            });
+        }
         holder.buss_status_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(),CalenderActivity.class);
-                intent.putExtra("buisness-Id",buss_list.get(position).getId());
+                intent.putExtra("buisness-customer-Id",buss_list.get(position).getUniqueId());
+                intent.putExtra("buisness-Id",buss_list.get(position).getBussId());
                 intent.putExtra("Customer-Id",currUser.getUid());
                 context.startActivity(intent);
             }

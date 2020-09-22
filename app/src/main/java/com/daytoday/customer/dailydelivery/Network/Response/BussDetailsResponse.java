@@ -1,6 +1,6 @@
 package com.daytoday.customer.dailydelivery.Network.Response;
 
-import com.daytoday.business.dailydelivery.MainHomeScreen.Model.Bussiness;
+import com.daytoday.customer.dailydelivery.Product;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -13,7 +13,7 @@ public class BussDetailsResponse {
     private Boolean error;
     @SerializedName("buss")
     @Expose
-    private List<Bussiness> buss = null;
+    private List<Product> buss = null;
 
     public Boolean getError() {
         return error;
@@ -23,11 +23,11 @@ public class BussDetailsResponse {
         this.error = error;
     }
 
-    public List<Bussiness> getBuss() {
+    public List<Product> getBuss() {
         return buss;
     }
 
-    public void setBuss(List<Bussiness> buss) {
+    public void setBuss(List<Product> buss) {
         this.buss = buss;
     }
 }

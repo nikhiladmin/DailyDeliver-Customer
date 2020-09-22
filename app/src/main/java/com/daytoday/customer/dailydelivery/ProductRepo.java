@@ -2,39 +2,29 @@ package com.daytoday.customer.dailydelivery;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.daytoday.customer.dailydelivery.Network.ApiInterface;
+import com.daytoday.customer.dailydelivery.Network.Client;
+import com.daytoday.customer.dailydelivery.Network.Response.CustRelBussResponse;
+import com.daytoday.customer.dailydelivery.Utilities.AppConstants;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 
-import org.xml.sax.helpers.LocatorImpl;
-
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ProductRepo {
     public MutableLiveData<List<Product>> requestProduct() {
         MutableLiveData<List<Product>> mutableLiveData = new MutableLiveData<>();
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         FirebaseUser currUser = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        ApiInterface apiInterface = Client.getClient().create(ApiInterface.class);
         //-----------------------------------------Initialise Here ---------------------------------
 
-        reference.child("Cust_Buss_Rel").child(currUser.getUid()).addValueEventListener(new ValueEventListener() {
+        /*reference.child("Cust_Buss_Rel").child(currUser.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Iterator iterator = dataSnapshot.getChildren().iterator();
@@ -63,6 +53,19 @@ public class ProductRepo {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
+            }
+        });*/
+        Call<CustRelBussResponse> custRelBussResponseCall = apiInterface.getRelBuss(currUser.getUid());
+        custRelBussResponseCall.enqueue(new Callback<CustRelBussResponse>() {
+            @Override
+            public void onResponse(Call<CustRelBussResponse> call, Response<CustRelBussResponse> response) {
+                Log.i("message" , " Response Successful " + response.body().getCust());
+                mutableLiveData.setValue(response.body().getCust());
+            }
+
+            @Override
+            public void onFailure(Call<CustRelBussResponse> call, Throwable t) {
+                Log.i(AppConstants.ERROR_LOG,"Some Error Occurred in ProductRepo Error is : { " + t.getMessage() + " }");
             }
         });
         //-----------------------------------------Ends Here ---------------------------------------
