@@ -1,85 +1,129 @@
 package com.daytoday.customer.dailydelivery;
 
-public class Product {    private String productName, MonthDay;
-    private String price;
-    private String image;
-    private String cust_cout;
-    private String PhoneNo;
-    private String Address;
-    private String Id;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-    public Product(String productName, String monthDay, String price, String image, String cust_cout, String phoneNo, String address, String id) {
-        this.productName = productName;
-        MonthDay = monthDay;
-        this.price = price;
-        this.image = image;
-        this.cust_cout = cust_cout;
-        PhoneNo = phoneNo;
-        Address = address;
-        Id = id;
+public class Product {
+
+    @SerializedName("UniqueId")
+    @Expose
+    private Integer uniqueId;
+    @SerializedName("BussId")
+    @Expose
+    private Integer bussId;
+    @SerializedName("CustId")
+    @Expose
+    private Integer custId;
+    @SerializedName("bussuserid")
+    @Expose
+    private String bussuserid;
+    @SerializedName("Name")
+    @Expose
+    private String name;
+    @SerializedName("Phoneno")
+    @Expose
+    private String phoneno;
+    @SerializedName("Address")
+    @Expose
+    private String address;
+    @SerializedName("Price")
+    @Expose
+    private Integer price;
+    @SerializedName("DOrM")
+    @Expose
+    private String dOrM;
+    @SerializedName("Payment")
+    @Expose
+    private String payment;
+    @SerializedName("Imgurl")
+    @Expose
+    private String imgurl;
+
+    public Integer getUniqueId() {
+        return uniqueId;
     }
 
-    public String getProductName() {
-        return productName;
+    public void setUniqueId(Integer uniqueId) {
+        this.uniqueId = uniqueId;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public Integer getBussId() {
+        return bussId;
     }
 
-    public String getMonthDay() {
-        return MonthDay;
+    public void setBussId(Integer bussId) {
+        this.bussId = bussId;
     }
 
-    public void setMonthDay(String monthDay) {
-        MonthDay = monthDay;
+    public Integer getCustId() {
+        return custId;
     }
 
-    public String getPrice() {
-        return price;
+    public void setCustId(Integer custId) {
+        this.custId = custId;
     }
 
-    public void setPrice(String price) {
-        this.price = price;
+    public String getBussuserid() {
+        return bussuserid;
     }
 
-    public String getImage() {
-        return image;
+    public void setBussuserid(String bussuserid) {
+        this.bussuserid = bussuserid;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public String getName() {
+        return name;
     }
 
-    public String getCust_cout() {
-        return cust_cout;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setCust_cout(String cust_cout) {
-        this.cust_cout = cust_cout;
+    public String getPhoneno() {
+        return phoneno;
     }
 
-    public String getPhoneNo() {
-        return PhoneNo;
-    }
-
-    public void setPhoneNo(String phoneNo) {
-        PhoneNo = phoneNo;
+    public void setPhoneno(String phoneno) {
+        this.phoneno = phoneno;
     }
 
     public String getAddress() {
-        return Address;
+        return address;
     }
 
     public void setAddress(String address) {
-        Address = address;
+        this.address = address;
     }
 
-    public String getId() {
-        return Id;
+    public Integer getPrice() {
+        return price;
     }
 
-    public void setId(String id) {
-        Id = id;
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
+    public String getDOrM() {
+        return dOrM;
+    }
+
+    public void setDOrM(String dOrM) {
+        this.dOrM = dOrM;
+    }
+
+    public String getPayment() {
+        return payment;
+    }
+
+    public void setPayment(String payment) {
+        this.payment = payment;
+    }
+
+    public String getImgurl() {
+        return imgurl;
+    }
+
+    public void setImgurl(String imgurl) {
+        this.imgurl = imgurl;
     }
 }

@@ -93,6 +93,7 @@ public class HomeScreenActivity extends AppCompatActivity implements BottomNavig
 
     private void check(String Uid) {
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        //TODO Remove this also
         firebaseFirestore.collection("Buss_Info").document(Uid)
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
@@ -132,10 +133,7 @@ public class HomeScreenActivity extends AppCompatActivity implements BottomNavig
     }
 
     private void AddBuisness(String id) {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        FirebaseUser currentuser = FirebaseAuth.getInstance().getCurrentUser();
-        reference.child("Buss_Cust_Rel").child(id).child(currentuser.getUid()).setValue(true);
-        reference.child("Cust_Buss_Rel").child(currentuser.getUid()).child(id).setValue(true);
+        //TODO add buisness here
     }
 }
 
