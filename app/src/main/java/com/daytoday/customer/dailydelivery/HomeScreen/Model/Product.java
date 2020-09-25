@@ -13,7 +13,7 @@ public class Product {
     private Integer bussId;
     @SerializedName("CustId")
     @Expose
-    private Integer custId;
+    private String custId;
     @SerializedName("bussuserid")
     @Expose
     private String bussuserid;
@@ -67,11 +67,11 @@ public class Product {
         this.bussId = bussId;
     }
 
-    public Integer getCustId() {
+    public String getCustId() {
         return custId;
     }
 
-    public void setCustId(Integer custId) {
+    public void setCustId(String custId) {
         this.custId = custId;
     }
 

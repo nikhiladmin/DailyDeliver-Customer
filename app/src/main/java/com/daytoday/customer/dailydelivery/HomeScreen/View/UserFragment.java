@@ -17,7 +17,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.daytoday.customer.dailydelivery.LoginActivity.LoginPage;
+import com.daytoday.customer.dailydelivery.Network.ApiInterface;
+import com.daytoday.customer.dailydelivery.Network.Client;
+import com.daytoday.customer.dailydelivery.Network.Response.YesNoResponse;
 import com.daytoday.customer.dailydelivery.R;
+import com.daytoday.customer.dailydelivery.Utilities.SaveOfflineManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -27,6 +31,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -38,6 +43,10 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class UserFragment extends Fragment {
 
@@ -61,10 +70,11 @@ public class UserFragment extends Fragment {
         button=view.findViewById(R.id.submitbutton);
         signoutbutton=view.findViewById(R.id.signout);
         username=firebaseAuth.getCurrentUser().getDisplayName().toUpperCase();
-        usertextview.setText(username);
-        userid.setText("ID-"+firebaseAuth.getUid());
-        usernameEditText.setText(username);
-        userphoneEditText.setText(firebaseAuth.getCurrentUser().getPhoneNumber());
+        usertextview.setText(SaveOfflineManager.getUserName(getContext()));
+        userid.setText("ID-"+ SaveOfflineManager.getUserId(getContext()));
+        usernameEditText.setText(SaveOfflineManager.getUserName(getContext()));
+        userphoneEditText.setText(SaveOfflineManager.getUserPhoneNumber(getContext()));
+        userAddress.setText(SaveOfflineManager.getUserAdress(getContext()));
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,7 +86,6 @@ public class UserFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         updateData();
-                        Snackbar.make(getActivity().findViewById(android.R.id.content),"Changes will take sometime to reflect.",Snackbar.LENGTH_LONG).show();
                     }
                 });
                 alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -109,66 +118,44 @@ public class UserFragment extends Fragment {
                 }).show();
             }
         });
-        getAddress();//------getting address please check here
+        //getAddress();//------getting address please check here
         return view;
     }
 
 
     public void getAddress()
     {
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        FirebaseAuth firebaseAuth;
-        firebaseAuth=FirebaseAuth.getInstance();
-        Log.e("TAG", "getAddress: "+firebaseAuth.getUid() );
-        firestore.collection("Cust_User_Info").document(firebaseAuth.getUid())
-                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                        String name = documentSnapshot.get("Name").toString();
-                        String address = documentSnapshot.get("Address").toString();
-                        String PhoneNo = documentSnapshot.get("PhoneNo").toString();
-                        Log.e("TAG", "onEvent: "+ address);
-                        userAddress.setText(address);
-                    }
-                });
+        String address="";
+        userAddress.setText(address);
     }
 
 
     public void updateData()
     {
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        DocumentReference documentReference = firestore.collection("Cust_User_Info").document(FirebaseAuth.getInstance().getUid());
-        Map<String,Object> updateMap=new HashMap<>();
-        updateMap.put("Name",usernameEditText.getText().toString().trim());
-        updateMap.put("Address",userAddress.getText().toString().trim());
-        documentReference.update(updateMap)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("TAG", "DocumentSnapshot successfully updated!");
-                        Snackbar.make(getActivity().findViewById(android.R.id.content),"Profile Updated Successfully",Snackbar.LENGTH_LONG).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("TAG", "Error updating document", e);
-                        Snackbar.make(getActivity().findViewById(android.R.id.content),"Profile update failed. Try Again",Snackbar.LENGTH_LONG).show();
-                    }
-                });
-        FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
+        String name=usernameEditText.getText().toString();
+        String address=userAddress.getText().toString();
+        String phone=userphoneEditText.getText().toString();
+        String custid=SaveOfflineManager.getUserId(getContext());
+        Log.e("tag",""+name+" "+address+" "+phone+" "+custid);
+        ApiInterface apiInterface= Client.getClient().create(ApiInterface.class);
+        Call<YesNoResponse> updateUserInfo = apiInterface.updateCutUserDetails(name,phone,address,custid);
+        updateUserInfo.enqueue(new Callback<YesNoResponse>() {
+            @Override
+            public void onResponse(Call<YesNoResponse> call, Response<YesNoResponse> response) {
+                Snackbar.make(getActivity().findViewById(android.R.id.content),"Changes will take sometime to reflect.",Snackbar.LENGTH_LONG).show();
+                saveOffline(name,address,phone);
+            }
 
-        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setDisplayName(usernameEditText.getText().toString().trim())
-                .build();
-        firebaseAuth.getCurrentUser().updateProfile(profileUpdates)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d("TAG", "User profile updated.");
-                        }
-                    }
-                });
+            @Override
+            public void onFailure(Call<YesNoResponse> call, Throwable t) {
+                Log.e("tag",""+t);
+                Snackbar.make(getActivity().findViewById(android.R.id.content),"Data Update Failed.Try Again",Snackbar.LENGTH_LONG).show();
+            }
+        });
+    }
+    private void saveOffline(String name, String adress,String phone) {
+        SaveOfflineManager.setUserName(getContext(),name);
+        SaveOfflineManager.setUserAdress(getContext(),adress);
+        SaveOfflineManager.setUserPhoneNumber(getContext(),phone);
     }
 }
