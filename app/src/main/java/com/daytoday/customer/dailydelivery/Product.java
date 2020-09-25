@@ -38,6 +38,18 @@ public class Product {
     @SerializedName("Imgurl")
     @Expose
     private String imgurl;
+    @SerializedName("NoOfCust")
+    @Expose
+    private Integer noOfCust;
+    @SerializedName("TotCan")
+    @Expose
+    private Integer totCan;
+    @SerializedName("TotEarn")
+    @Expose
+    private Integer totEarn;
+    @SerializedName("TotPen")
+    @Expose
+    private Integer totPen;
 
     public Integer getUniqueId() {
         return uniqueId;
@@ -125,5 +137,45 @@ public class Product {
 
     public void setImgurl(String imgurl) {
         this.imgurl = imgurl;
+    }
+
+    public String getdOrM() {
+        return dOrM;
+    }
+
+    public void setdOrM(String dOrM) {
+        this.dOrM = dOrM;
+    }
+
+    public Integer getNoOfCust() {
+        return noOfCust;
+    }
+
+    public void setNoOfCust(Integer noOfCust) {
+        this.noOfCust = noOfCust;
+    }
+
+    public Integer getTotCan() {
+        return totCan;
+    }
+
+    public void setTotCan(Integer totCan) {
+        this.totCan = totCan;
+    }
+
+    public Integer getTotEarn() {
+        return totEarn;
+    }
+
+    public void setTotEarn(Integer totEarn) {
+        this.totEarn = totEarn;
+    }
+
+    public Integer getTotPen() {
+        return totPen;
+    }
+
+    public void setTotPen(Integer totPen) {
+        this.totPen = totPen;
     }
 }
