@@ -14,8 +14,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import com.daytoday.customer.dailydelivery.Network.ApiInterface;
+import com.daytoday.customer.dailydelivery.Network.Client;
+import com.daytoday.customer.dailydelivery.Network.Response.BussDetailsResponse;
+import com.daytoday.customer.dailydelivery.Network.Response.YesNoResponse;
 import com.daytoday.customer.dailydelivery.R;
+import com.daytoday.customer.dailydelivery.Utilities.AppConstants;
+import com.daytoday.customer.dailydelivery.Utilities.SaveOfflineManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -26,10 +33,15 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class HomeScreenActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     BottomNavigationView bottomNavigationView;
     Toolbar toolbar;
+    ApiInterface apiInterface;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +50,7 @@ public class HomeScreenActivity extends AppCompatActivity implements BottomNavig
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         toolbar=findViewById(R.id.toolbar_home);
+        apiInterface = Client.getClient().create(ApiInterface.class);
         setSupportActionBar(toolbar);
         if(savedInstanceState==null)
         {
@@ -93,7 +106,8 @@ public class HomeScreenActivity extends AppCompatActivity implements BottomNavig
 
     private void check(String Uid) {
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("Buss_Info").document(Uid)
+        //TODO Remove this also and don't remove until asked might contains some neededcode in it
+        /*firebaseFirestore.collection("Buss_Info").document(Uid)
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
@@ -128,14 +142,36 @@ public class HomeScreenActivity extends AppCompatActivity implements BottomNavig
                             builder.show();
                         }
                     }
-                });
+                });*/
+        Call<BussDetailsResponse> bussDetailsResponseCall = apiInterface.getBussList(Uid);
+        bussDetailsResponseCall.enqueue(new Callback<BussDetailsResponse>() {
+            @Override
+            public void onResponse(Call<BussDetailsResponse> call, Response<BussDetailsResponse> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<BussDetailsResponse> call, Throwable t) {
+
+            }
+        });
     }
 
     private void AddBuisness(String id) {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        FirebaseUser currentuser = FirebaseAuth.getInstance().getCurrentUser();
-        reference.child("Buss_Cust_Rel").child(id).child(currentuser.getUid()).setValue(true);
-        reference.child("Cust_Buss_Rel").child(currentuser.getUid()).child(id).setValue(true);
+        Call<YesNoResponse> addBussCustDetails = apiInterface.addBussCustDetails(id, SaveOfflineManager.getUserId(this));
+        addBussCustDetails.enqueue(new Callback<YesNoResponse>() {
+            @Override
+            public void onResponse(Call<YesNoResponse> call, Response<YesNoResponse> response) {
+                if (!response.body().getError()) {
+                    Toast.makeText(HomeScreenActivity.this, "Business Added", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<YesNoResponse> call, Throwable t) {
+                Log.i(AppConstants.ERROR_LOG,"Some Error Occurred in HomeScreenActivity Error is : { " + t.getMessage() + " }");
+            }
+        });
     }
 }
 
