@@ -1,4 +1,4 @@
-package com.daytoday.customer.dailydelivery;
+package com.daytoday.customer.dailydelivery.HomeScreen.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
 
+import com.daytoday.customer.dailydelivery.R;
 import com.google.android.gms.vision.barcode.Barcode;
 
 import java.util.List;

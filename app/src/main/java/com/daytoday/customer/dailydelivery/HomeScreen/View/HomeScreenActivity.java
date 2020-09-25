@@ -1,4 +1,4 @@
-package com.daytoday.customer.dailydelivery;
+package com.daytoday.customer.dailydelivery.HomeScreen.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +20,7 @@ import com.daytoday.customer.dailydelivery.Network.ApiInterface;
 import com.daytoday.customer.dailydelivery.Network.Client;
 import com.daytoday.customer.dailydelivery.Network.Response.BussDetailsResponse;
 import com.daytoday.customer.dailydelivery.Network.Response.YesNoResponse;
+import com.daytoday.customer.dailydelivery.R;
 import com.daytoday.customer.dailydelivery.Utilities.AppConstants;
 import com.daytoday.customer.dailydelivery.Utilities.SaveOfflineManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -87,7 +88,7 @@ public class HomeScreenActivity extends AppCompatActivity implements BottomNavig
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.scan_business:
-                startActivityForResult(new Intent(HomeScreenActivity.this,ScanActivity.class),1);
+                startActivityForResult(new Intent(HomeScreenActivity.this, ScanActivity.class),1);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

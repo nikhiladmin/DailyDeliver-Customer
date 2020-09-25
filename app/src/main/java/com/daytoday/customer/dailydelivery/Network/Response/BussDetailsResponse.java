@@ -1,6 +1,6 @@
 package com.daytoday.customer.dailydelivery.Network.Response;
 
-import com.daytoday.customer.dailydelivery.Product;
+import com.daytoday.customer.dailydelivery.HomeScreen.Model.Product;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
