@@ -1,7 +1,8 @@
-package com.daytoday.customer.dailydelivery;
+package com.daytoday.customer.dailydelivery.HomeScreen.View;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.daytoday.customer.dailydelivery.LoginActivity.LoginPage;
+import com.daytoday.customer.dailydelivery.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -41,7 +44,7 @@ public class UserFragment extends Fragment {
     FirebaseAuth firebaseAuth;
     MaterialTextView usertextview,userid;
     EditText usernameEditText,userphoneEditText,userAddress;
-    MaterialButton button;
+    MaterialButton button,signoutbutton;
     String username;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,6 +59,7 @@ public class UserFragment extends Fragment {
         userphoneEditText.setEnabled(false);
         userAddress=view.findViewById(R.id.myacc_address);
         button=view.findViewById(R.id.submitbutton);
+        signoutbutton=view.findViewById(R.id.signout);
         username=firebaseAuth.getCurrentUser().getDisplayName().toUpperCase();
         usertextview.setText(username);
         userid.setText("ID-"+firebaseAuth.getUid());
@@ -79,6 +83,28 @@ public class UserFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Snackbar.make(getActivity().findViewById(android.R.id.content),"Profile Update Cancelled",Snackbar.LENGTH_SHORT).show();
+                    }
+                }).show();
+            }
+        });
+        signoutbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MaterialAlertDialogBuilder alertDialog = new MaterialAlertDialogBuilder(getActivity());
+                alertDialog.setMessage("Do you want to logout?");
+                alertDialog.setTitle("Confirm");
+                alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        FirebaseAuth.getInstance().signOut();
+                        getActivity().finishAffinity();
+                        startActivity(new Intent(getActivity(), LoginPage.class));
+                    }
+                });
+                alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
                     }
                 }).show();
             }

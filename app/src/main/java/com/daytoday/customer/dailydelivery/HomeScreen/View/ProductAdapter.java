@@ -1,4 +1,4 @@
-package com.daytoday.customer.dailydelivery;
+package com.daytoday.customer.dailydelivery.HomeScreen.View;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +13,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.daytoday.customer.dailydelivery.HomeScreen.Model.Product;
+import com.daytoday.customer.dailydelivery.R;
+import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
@@ -41,24 +44,24 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         holder.buss_name.setText(buss_list.get(position).getName());
         holder.buss_add.setText(buss_list.get(position).getAddress());
-        holder.price.setText("Rs. "+buss_list.get(position).getPrice() + " - " +buss_list.get(position).getDOrM());
-       // holder.customers.setText("( " + buss_list.get(position).getCust_cout() + " Customers )");
-        if (buss_list.get(position).getImgurl()!=null) {
-            Picasso.get()
-                    .load(buss_list.get(position).getImgurl())
-                    .resize(5000, 5000)
-                    .centerCrop()
-                    .into(holder.buss_img);
-            holder.call_img.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(Intent.ACTION_DIAL);
-                    intent.setData(Uri.parse("tel:" + buss_list.get(position).getPhoneno()));
-                    v.getContext().startActivity(intent);
-                }
-            });
+        holder.price.setText("Rs. " + buss_list.get(position).getPrice() + " - " + buss_list.get(position).getDOrM());
+        // holder.customers.setText("( " + buss_list.get(position).getCust_cout() + " Customers )");
+        if (buss_list.get(position).getImgurl() != null) {
+        Picasso.get()
+                .load(buss_list.get(position).getImgurl())
+                .resize(5000, 5000)
+                .centerCrop()
+                .into(holder.buss_img);
+        holder.call_img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + buss_list.get(position).getPhoneno()));
+                v.getContext().startActivity(intent);
+            }
+        });
         }
-        holder.buss_status_btn.setOnClickListener(new View.OnClickListener() {
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(),CalenderActivity.class);
@@ -79,6 +82,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         Button buss_status_btn;
         TextView buss_name,buss_add,price,customers;
         ImageView buss_img,call_img;
+        MaterialCardView cardView;
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
             buss_add = itemView.findViewById(R.id.buss_address);
@@ -86,8 +90,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             //customers = itemView.findViewById(R.id.customers);
             buss_name = itemView.findViewById(R.id.buss_name);
             buss_img = itemView.findViewById(R.id.buss_img);
-            buss_status_btn = itemView.findViewById(R.id.buss_status_btn);
             call_img = itemView.findViewById(R.id.call_buss_btn);
+            cardView=itemView.findViewById(R.id.producardview);
         }
     }
 }
