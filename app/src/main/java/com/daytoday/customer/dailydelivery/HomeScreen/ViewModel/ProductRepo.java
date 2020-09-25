@@ -76,13 +76,13 @@ public class ProductRepo {
         custRelBussResponseCall.enqueue(new Callback<CustRelBussResponse>() {
             @Override
             public void onResponse(Call<CustRelBussResponse> call, Response<CustRelBussResponse> response) {
-                Log.i("message" , " Response Successful " + response.body().getCust());
+                Log.e("message" , " Response Successful " + response.body().getCust());
                 mutableLiveData.setValue(response.body().getCust());
             }
 
             @Override
             public void onFailure(Call<CustRelBussResponse> call, Throwable t) {
-                Log.i(AppConstants.ERROR_LOG,"Some Error Occurred in ProductRepo Error is : { " + t.getMessage() + " }");
+                Log.e(AppConstants.ERROR_LOG,"Some Error Occurred in ProductRepo Error is : { " + t.getMessage() + " }");
             }
         });
         //-----------------------------------------Ends Here ---------------------------------------
