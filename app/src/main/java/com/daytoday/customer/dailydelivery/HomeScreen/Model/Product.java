@@ -5,16 +5,16 @@ import com.google.gson.annotations.SerializedName;
 
 public class Product {
 
-    @SerializedName("UniqueId")
+    @SerializedName("uniqueId")
     @Expose
     private Integer uniqueId;
-    @SerializedName("BussId")
+    @SerializedName("bussId")
     @Expose
-    private Integer bussId;
-    @SerializedName("CustId")
+    private String bussId;
+    @SerializedName("custId")
     @Expose
-    private Integer custId;
-    @SerializedName("bussuserid")
+    private String custId;
+    @SerializedName("bussuserId")
     @Expose
     private String bussuserid;
     @SerializedName("Name")
@@ -59,19 +59,19 @@ public class Product {
         this.uniqueId = uniqueId;
     }
 
-    public Integer getBussId() {
+    public String getBussId() {
         return bussId;
     }
 
-    public void setBussId(Integer bussId) {
+    public void setBussId(String bussId) {
         this.bussId = bussId;
     }
 
-    public Integer getCustId() {
+    public String getCustId() {
         return custId;
     }
 
-    public void setCustId(Integer custId) {
+    public void setCustId(String custId) {
         this.custId = custId;
     }
 
@@ -177,5 +177,26 @@ public class Product {
 
     public void setTotPen(Integer totPen) {
         this.totPen = totPen;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "uniqueId=" + uniqueId +
+                ", bussId='" + bussId + '\'' +
+                ", custId='" + custId + '\'' +
+                ", bussuserid='" + bussuserid + '\'' +
+                ", name='" + name + '\'' +
+                ", phoneno='" + phoneno + '\'' +
+                ", address='" + address + '\'' +
+                ", price=" + price +
+                ", dOrM='" + dOrM + '\'' +
+                ", payment='" + payment + '\'' +
+                ", imgurl='" + imgurl + '\'' +
+                ", noOfCust=" + noOfCust +
+                ", totCan=" + totCan +
+                ", totEarn=" + totEarn +
+                ", totPen=" + totPen +
+                '}';
     }
 }

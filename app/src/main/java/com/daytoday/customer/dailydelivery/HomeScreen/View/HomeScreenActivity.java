@@ -37,7 +37,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeScreenActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class HomeScreenActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, BusinessAdapter.ClickListener {
 
     BottomNavigationView bottomNavigationView;
     Toolbar toolbar;
@@ -100,12 +100,16 @@ public class HomeScreenActivity extends AppCompatActivity implements BottomNavig
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null) {
             Log.i("msg",data.getStringExtra("Answer"));
-            check(data.getStringExtra("Answer"));
+            check(decrypt(data.getStringExtra("Answer")));
         }
     }
 
+    private String decrypt(String answer) {
+        //TODO Decrypt The QrCOde Which Are Passing
+        return answer;
+    }
+
     private void check(String Uid) {
-        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
         //TODO Remove this also and don't remove until asked might contains some neededcode in it
         /*firebaseFirestore.collection("Buss_Info").document(Uid)
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -147,7 +151,10 @@ public class HomeScreenActivity extends AppCompatActivity implements BottomNavig
         bussDetailsResponseCall.enqueue(new Callback<BussDetailsResponse>() {
             @Override
             public void onResponse(Call<BussDetailsResponse> call, Response<BussDetailsResponse> response) {
-
+                if(!response.body().getError()){
+                    BuisnessBottomSheet buisnessBottomSheet = new BuisnessBottomSheet(response.body().getBuss());
+                    buisnessBottomSheet.show(getSupportFragmentManager(),"SelectBusiness");
+                }
             }
 
             @Override
@@ -157,11 +164,15 @@ public class HomeScreenActivity extends AppCompatActivity implements BottomNavig
         });
     }
 
-    private void AddBuisness(String id) {
-        Call<YesNoResponse> addBussCustDetails = apiInterface.addBussCustDetails(id, SaveOfflineManager.getUserId(this));
+    @Override
+    public void addBusiness(String uid) {
+        Call<YesNoResponse> addBussCustDetails = apiInterface.addBussCustDetails(uid, SaveOfflineManager.getUserId(this));
         addBussCustDetails.enqueue(new Callback<YesNoResponse>() {
             @Override
             public void onResponse(Call<YesNoResponse> call, Response<YesNoResponse> response) {
+                if (response.body().getError()){
+                    Log.i(AppConstants.ERROR_LOG,"Some Error Occurred in HomeScreenActivity Error is : { " + response.body().getMessage() + " }");
+                }
                 if (!response.body().getError()) {
                     Toast.makeText(HomeScreenActivity.this, "Business Added", Toast.LENGTH_SHORT).show();
                 }
