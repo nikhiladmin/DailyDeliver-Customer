@@ -41,7 +41,7 @@ public interface ApiInterface {
 
     @GET("update-cust-user-details")
     Call<YesNoResponse> updateCutUserDetails(@Query("name") String name
-            ,@Query("phone") String phone,@Query("address") String address);
+            ,@Query("phone") String phone,@Query("address") String address,@Query("custid") String custid);
 
    /* @GET("fetch-emp")
     Call<> getEmp(@Query("") String );*/
