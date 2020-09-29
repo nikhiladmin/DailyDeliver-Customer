@@ -7,7 +7,9 @@ import androidx.lifecycle.Observer;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 
+import com.daytoday.customer.dailydelivery.Dates;
 import com.daytoday.customer.dailydelivery.HomeScreen.ViewModel.DatesViewModel;
 import com.daytoday.customer.dailydelivery.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,17 +28,19 @@ import java.util.List;
 
 public class CalenderActivity extends AppCompatActivity {
     MaterialCalendarView calendarView;
-    String bussID,custID;
+    String bussID,custID,bussCustId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calender);
+        bussCustId = "" + getIntent().getStringExtra("buisness-customer-Id");
+        Log.i("msg","shuvam " + bussCustId);
         bussID  = getIntent().getStringExtra("buisness-Id");
         custID = getIntent().getStringExtra("Customer-Id");
         getSupportActionBar().setTitle("Calender");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         calendarView = findViewById(R.id.calendar);
-        DatesViewModel datesViewModel = new DatesViewModel(bussID,custID);
+        DatesViewModel datesViewModel = new DatesViewModel(bussCustId);
 
         calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
@@ -47,44 +51,44 @@ public class CalenderActivity extends AppCompatActivity {
                 builder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        SendToAccept(date,bussID,custID);
+                        SendToAccept(date,bussCustId);
                     }
                 }).setNegativeButton("Reject", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        sendToReject(date,bussID,custID);
+                        sendToReject(date,bussCustId);
                     }
                 });
                 builder.show();
             }
         });
 
-        datesViewModel.getAcceptedList().observe(this, new Observer<List<CalendarDay>>() {
+        datesViewModel.getAcceptedList().observe(this, new Observer<List<Dates>>() {
             @Override
-            public void onChanged(List<CalendarDay> dates) {
+            public void onChanged(List<Dates> dates) {
                 CircleDecorator decorator = new CircleDecorator(CalenderActivity.this,R.drawable.accepted_color,dates);
                 calendarView.addDecorators(decorator);
             }
         });
 
-        datesViewModel.getCancelledList().observe(this, new Observer<List<CalendarDay>>() {
+        datesViewModel.getCancelledList().observe(this, new Observer<List<Dates>>() {
             @Override
-            public void onChanged(List<CalendarDay> dates) {
+            public void onChanged(List<Dates> dates) {
                 CircleDecorator decorator = new CircleDecorator(CalenderActivity.this,R.drawable.canceled_color,dates);
                 calendarView.addDecorators(decorator);
             }
         });
 
-        datesViewModel.getPendingList().observe(this, new Observer<List<CalendarDay>>() {
+        datesViewModel.getPendingList().observe(this, new Observer<List<Dates>>() {
             @Override
-            public void onChanged(List<CalendarDay> dates) {
-                CircleDecorator decorator = new CircleDecorator(CalenderActivity.this,R.drawable.pending_color,dates);
+            public void onChanged(List<Dates> dates) {
+                CircleDecorator decorator = new CircleDecorator(CalenderActivity.this, R.drawable.pending_color, dates);
                 calendarView.addDecorator(decorator);
             }
         });
     }
 
-    private void sendToReject(CalendarDay day,String bussID,String custID) {
+    private void sendToReject(CalendarDay day,String busscustID) {
         HashMap<String,String> value = new HashMap<>();
         String currDate = "" + day.getYear() + day.getMonth() + day.getDay();
         FirebaseUser curruser = FirebaseAuth.getInstance().getCurrentUser();
@@ -93,7 +97,7 @@ public class CalenderActivity extends AppCompatActivity {
         value.put("Mon", String.valueOf(day.getMonth()));
         value.put("Day", String.valueOf(day.getDay()));
 
-        reference.child("Buss_Cust_DayWise").child(bussID).child(custID).child("Pending")
+        reference.child("Buss_Cust_DayWise").child(busscustID).child("Pending")
                 .child(currDate)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -102,7 +106,7 @@ public class CalenderActivity extends AppCompatActivity {
                         {
                             String quantity = dataSnapshot.child("quantity").getValue().toString();
                             value.put("quantity",quantity);
-                            reference.child("Buss_Cust_DayWise").child(bussID).child(custID).child("Rejected")
+                            reference.child("Buss_Cust_DayWise").child(busscustID).child("Rejected")
                                     .child(currDate).setValue(value);
                         }
                     }
@@ -112,11 +116,13 @@ public class CalenderActivity extends AppCompatActivity {
 
                     }
                 });
-        reference.child("Buss_Cust_DayWise").child(bussID).child(custID).child("Pending")
+        reference.child("Buss_Cust_DayWise").child(busscustID).child("Pending")
                 .child(currDate).removeValue();
     }
 
-    private void SendToAccept(CalendarDay day,String bussID,String custID) {
+    private void SendToAccept(CalendarDay day,String busscustID) {
+        //TODO Accept The Buisness
+        /*
         HashMap<String,String> value = new HashMap<>();
         String currDate = "" + day.getYear() + day.getMonth() + day.getDay();
         FirebaseUser curruser = FirebaseAuth.getInstance().getCurrentUser();
@@ -147,7 +153,7 @@ public class CalenderActivity extends AppCompatActivity {
         reference.child("Buss_Cust_DayWise").child(bussID).child(custID).child("Pending")
                 .child(currDate).removeValue();
         reference.child("Buss_Cust_DayWise").child(bussID).child(custID).child("Rejected")
-                .child(currDate).removeValue();
+                .child(currDate).removeValue();*/
     }
 
 
