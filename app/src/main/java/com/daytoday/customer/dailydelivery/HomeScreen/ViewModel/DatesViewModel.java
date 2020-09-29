@@ -3,38 +3,38 @@ package com.daytoday.customer.dailydelivery.HomeScreen.ViewModel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.daytoday.customer.dailydelivery.Dates;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.util.List;
 
 public class DatesViewModel extends ViewModel {
     private DatesRepo datesRepo;
-    private MutableLiveData<List<CalendarDay>> pendinglivedata = new MutableLiveData<>();
-    private MutableLiveData<List<CalendarDay>> acceptedlivedata = new MutableLiveData<>();
-    private MutableLiveData<List<CalendarDay>> canceledlivedata = new MutableLiveData<>();
-    String bussId,custId;
+    private MutableLiveData<List<Dates>> pendinglivedata = new MutableLiveData<>();
+    private MutableLiveData<List<Dates>> acceptedlivedata = new MutableLiveData<>();
+    private MutableLiveData<List<Dates>> canceledlivedata = new MutableLiveData<>();
+    String busscustId;
 
-    public DatesViewModel(String bussId, String custId) {
+    public DatesViewModel(String busscustId) {
+        this.busscustId = busscustId;
         datesRepo = new DatesRepo();
-        this.bussId = bussId;
-        this.custId = custId;
     }
 
-    public MutableLiveData<List<CalendarDay>> getPendingList()
+    public MutableLiveData<List<Dates>> getPendingList()
     {
-        pendinglivedata = datesRepo.requestPendingList(bussId,custId);
+        pendinglivedata = datesRepo.requestPendingList(busscustId);
         return pendinglivedata;
     }
 
-    public MutableLiveData<List<CalendarDay>> getAcceptedList()
+    public MutableLiveData<List<Dates>> getAcceptedList()
     {
-        acceptedlivedata = datesRepo.requestAcceptedList(bussId,custId);
+        acceptedlivedata = datesRepo.requestAcceptedList(busscustId);
         return acceptedlivedata;
     }
 
-    public MutableLiveData<List<CalendarDay>> getCancelledList()
+    public MutableLiveData<List<Dates>> getCancelledList()
     {
-        canceledlivedata = datesRepo.requestCancelledList(bussId,custId);
+        canceledlivedata = datesRepo.requestCancelledList(busscustId);
         return canceledlivedata;
     }
 }
