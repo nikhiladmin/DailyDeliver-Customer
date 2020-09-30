@@ -3,6 +3,7 @@ package com.daytoday.customer.dailydelivery.HomeScreen.View;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,7 +66,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(),CalenderActivity.class);
-                intent.putExtra("buisness-customer-Id",buss_list.get(position).getUniqueId());
+                Log.i("msg" ,buss_list.get(position).toString());
+                intent.putExtra("buisness-customer-Id","" + buss_list.get(position).getUniqueId());
                 intent.putExtra("buisness-Id",buss_list.get(position).getBussId());
                 intent.putExtra("Customer-Id",currUser.getUid());
                 context.startActivity(intent);

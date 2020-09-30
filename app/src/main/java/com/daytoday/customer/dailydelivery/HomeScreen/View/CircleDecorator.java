@@ -7,6 +7,7 @@ import android.text.style.ForegroundColorSpan;
 
 import androidx.core.content.ContextCompat;
 
+import com.daytoday.customer.dailydelivery.Dates;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
@@ -17,10 +18,10 @@ import java.util.Iterator;
 
 public class CircleDecorator implements DayViewDecorator {
 
-    private HashSet<CalendarDay> dates;
+    private HashSet<Dates> dates;
     private Drawable drawable;
 
-    public CircleDecorator(Context context, int resId, Collection<CalendarDay> dates) {
+    public CircleDecorator(Context context, int resId, Collection<Dates> dates) {
         drawable = ContextCompat.getDrawable(context, resId);
         this.dates = new HashSet<>(dates);
     }
@@ -28,7 +29,16 @@ public class CircleDecorator implements DayViewDecorator {
     @Override
     public boolean shouldDecorate(CalendarDay day)
     {
-        return dates.contains(day);
+        Iterator iterator = dates.iterator();
+        while (iterator.hasNext())
+        {
+            Dates norDay = (Dates)iterator.next();
+            if (day.equals( norDay.getDate()))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
