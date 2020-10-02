@@ -1,20 +1,21 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="SplashTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
+       <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <!-- Customize your theme here. -->
 
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorWhite</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorButtonNormal">@color/colorGoogleLogin</item>
     </style>
+
 
     <style name="nameOfStyle">
         <item name="colorControlNormal">@color/colorLightGray</item>
         <item name="colorControlActivated">@color/colorPrimary</item>
     </style>
 
-    <style name="SplashTheme.NoActionBarNavBar">
+    <style name="AppTheme.NoActionBarNavBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="elevation">0dp</item> <!-- This line is for matching the actionbar with toolbar-->
