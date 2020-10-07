@@ -99,7 +99,7 @@ public class HomeScreenActivity extends AppCompatActivity implements BottomNavig
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null) {
-            Log.i("msg",data.getStringExtra("Answer"));
+//            Log.i("msg",data.getStringExtra("Answer"));
             check(decrypt(data.getStringExtra("Answer")));
         }
     }
