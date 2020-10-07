@@ -2,18 +2,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.daytoday.customer.dailydelivery">
 
+    <permission android:name="android.permission.FLASHLIGHT" />
+    <permission android:name="android.permission.CAMERA" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/SplashTheme">
+        android:theme="@style/AppTheme">
         <activity android:name=".HomeScreen.View.ScanActivity"></activity>
         <activity android:name=".HomeScreen.View.CalenderActivity" />
         <activity
             android:name=".HomeScreen.View.HomeScreenActivity"
-            android:theme="@style/SplashTheme.NoActionBarNavBar"
+            android:theme="@style/AppTheme.NoActionBarNavBar"
             android:windowSoftInputMode="adjustPan"
             />
         <activity android:name=".WalkThrough.WalkThroughActivity" />
