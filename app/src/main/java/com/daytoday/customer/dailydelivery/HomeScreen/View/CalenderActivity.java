@@ -98,9 +98,19 @@ public class CalenderActivity extends AppCompatActivity {
     }
 
     private void sendToReject(CalendarDay day,String busscustID) {
+        Callback<YesNoResponse> addRejectedRequestCall = new Callback<YesNoResponse>() {
+            @Override
+            public void onResponse(Call<YesNoResponse> call, Response<YesNoResponse> response) {
+                Log.i("message","Response Successful " + response.body().getMessage());
+            }
+
+            @Override
+            public void onFailure(Call<YesNoResponse> call, Throwable t) {
+                Log.i(AppConstants.ERROR_LOG,"Some Error Occurred in CalenderActivity Error is : {" + t.getMessage() + " }");
+            }
+        };
         HashMap<String,String> value = new HashMap<>();
         String currDate = "" + day.getYear() + day.getMonth() + day.getDay();
-        FirebaseUser curruser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         value.put("Year", String.valueOf(day.getYear()));
         value.put("Mon", String.valueOf(day.getMonth()));
@@ -117,6 +127,8 @@ public class CalenderActivity extends AppCompatActivity {
                             value.put("quantity",quantity);
                             reference.child("Buss_Cust_DayWise").child(busscustID).child("Rejected")
                                     .child(currDate).setValue(value);
+                            Call<YesNoResponse> addRejectedRequest = apiInterface.addRejectedRequest(busscustID,quantity);
+                            addRejectedRequest.enqueue(addRejectedRequestCall);
                         }
                     }
 
