@@ -39,9 +39,11 @@ import retrofit2.Response;
 
 public class HomeScreenActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, BusinessAdapter.ClickListener {
 
+    private static final int BUSINESS_CODE = 3;
     BottomNavigationView bottomNavigationView;
     Toolbar toolbar;
     ApiInterface apiInterface;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +90,7 @@ public class HomeScreenActivity extends AppCompatActivity implements BottomNavig
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.scan_business:
-                startActivityForResult(new Intent(HomeScreenActivity.this, ScanActivity.class),1);
+                startActivityForResult(new Intent(HomeScreenActivity.this, ScanActivity.class),BUSINESS_CODE);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -98,9 +100,11 @@ public class HomeScreenActivity extends AppCompatActivity implements BottomNavig
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (data != null) {
+        if(requestCode == 3) {
+            if (data != null) {
 //            Log.i("msg",data.getStringExtra("Answer"));
-            check(decrypt(data.getStringExtra("Answer")));
+                check(decrypt(data.getStringExtra("Answer")));
+            }
         }
     }
 
