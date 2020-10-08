@@ -88,11 +88,16 @@ public class UserFragment extends Fragment {
     String TAG = "UPLOADING";
     private FirebaseStorage storage;
     private StorageReference storageRef;
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
+        storage=FirebaseStorage.getInstance();
+        storageRef = storage.getReference();
 
         View view = inflater.inflate(R.layout.fragment_user, container, false);
         firebaseAuth=FirebaseAuth.getInstance();
@@ -112,6 +117,10 @@ public class UserFragment extends Fragment {
         usernameEditText.setText(SaveOfflineManager.getUserName(getContext()));
         userphoneEditText.setText(SaveOfflineManager.getUserPhoneNumber(getContext()));
         userAddress.setText(SaveOfflineManager.getUserAdress(getContext()));
+
+
+        setProfileImage();
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -308,6 +317,7 @@ public class UserFragment extends Fragment {
             if (requestCode == GALLERY&& data!=null&&data.getData()!=null&& resultCode==RESULT_OK) {
 
                 if (data != null) {
+                    Log.i(TAG, "onActivityResult: "+data.getDataString());
                     Uri contentURI = data.getData();
                     FirebaseUpload(contentURI);
                 }
@@ -331,56 +341,47 @@ public class UserFragment extends Fragment {
 
         if(ImageUri!=null){
             ProgressDialog progressDialog =new ProgressDialog(getActivity());
-            progressDialog.setCancelable(false);
+            progressDialog.setCancelable(true);
             progressDialog.setTitle("Please Wait...");
             progressDialog.show();
             try {
-                StorageReference reference = storageRef.child("CustomerUser/" + firebaseAuth.getCurrentUser().getUid().toString());
-                reference.putFile(ImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        progressDialog.dismiss();
-                        Log.i(TAG, "onSuccess: ");
-                        reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                        .setPhotoUri(uri)
-                                        .build();
-                                firebaseAuth.getCurrentUser().updateProfile(profileUpdates)
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    Log.d("UPLOADIMAGE", "User profile updated.");
-                                                    setProfileImage();
-                                                }
+                Log.i(TAG, "onSuccess: ");
+                StorageReference reference = storageRef.child("CustomerUser/" + firebaseAuth.getCurrentUser().getUid());
+                reference.putFile(ImageUri).addOnSuccessListener(taskSnapshot -> {
+                    progressDialog.dismiss();
+                    Log.i(TAG, "onSuccess: "+storageRef.getBucket());
+                    reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                    .setPhotoUri(uri)
+                                    .build();
+                            firebaseAuth.getCurrentUser().updateProfile(profileUpdates)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Log.d(TAG, "User profile updated.");
+                                                setProfileImage();
                                             }
-                                        });
-                            }
-                        });
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Snackbar.make(getView(), "Uploading Failed", Snackbar.LENGTH_LONG).show();
-                        progressDialog.dismiss();
-                        Log.i(TAG, "onFailure: "+e.getMessage());
-                    }
+                                        }
+                                    });
+                        }
+                    });
+                }).addOnFailureListener(e -> {
+                    Snackbar.make(getView(), "Uploading Failed", Snackbar.LENGTH_LONG).show();
+                    progressDialog.dismiss();
+                    Log.i(TAG, "onFailure: "+e.getMessage());
                 }).addOnCanceledListener(new OnCanceledListener() {
                     @Override
                     public void onCanceled() {
                         progressDialog.dismiss();
                         Log.i(TAG, "onCanceled: ");
                     }
-                }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                        Log.i(TAG, "onProgress: ");
-                        double Progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                        progressDialog.setMessage("Uploading " + (int) Progress + "%");
-                    }
+                }).addOnProgressListener(taskSnapshot -> {
+                    Log.i(TAG, "onProgress: ");
+                    double Progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                    progressDialog.setMessage("Uploading " + (int) Progress + "%");
                 }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onPaused(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
@@ -388,6 +389,8 @@ public class UserFragment extends Fragment {
                     }
                 });
             }catch (Exception e){
+
+                Toast.makeText(getContext(), "Exception throws "+e.getMessage(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
         }
