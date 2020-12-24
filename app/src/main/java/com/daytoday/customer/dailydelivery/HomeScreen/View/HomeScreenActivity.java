@@ -151,7 +151,7 @@ public class HomeScreenActivity extends AppCompatActivity implements BottomNavig
                         }
                     }
                 });*/
-        Call<BussDetailsResponse> bussDetailsResponseCall = apiInterface.getBussList(Uid);
+        Call<BussDetailsResponse> bussDetailsResponseCall = apiInterface.getBussList(Uid,FirebaseAuth.getInstance().getCurrentUser().getUid());
         bussDetailsResponseCall.enqueue(new Callback<BussDetailsResponse>() {
             @Override
             public void onResponse(Call<BussDetailsResponse> call, Response<BussDetailsResponse> response) {

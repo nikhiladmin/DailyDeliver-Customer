@@ -58,7 +58,11 @@ public class BusinessAdapter extends RecyclerView.Adapter<BusinessAdapter.Busine
                     .centerCrop()
                     .into(holder.buss_img);
         }
-
+        if(productList.get(position).getConnected())
+        {
+            holder.add_buss.setText("Added");
+            holder.add_buss.setEnabled(false);
+        }
         holder.add_buss.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
