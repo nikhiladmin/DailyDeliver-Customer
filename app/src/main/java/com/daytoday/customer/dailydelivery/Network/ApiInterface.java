@@ -31,8 +31,8 @@ public interface ApiInterface {
     @GET("insert-rejected")
     Call<YesNoResponse> addRejectedRequest(@Query("bussUserId") String bussUserId,@Query("quantity") String quantity);
 
-    @GET("fetch-buss-list")
-    Call<BussDetailsResponse> getBussList(@Query("bussid") String bussId);
+    @GET("fetch-buss-list-cust")
+    Call<BussDetailsResponse> getBussList(@Query("bussid") String bussId,@Query("custid") String custid);
 
     @GET("fetch-rel-buss")
     Call<CustRelBussResponse> getRelBuss(@Query("custid") String custId);

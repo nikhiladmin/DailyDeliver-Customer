@@ -51,6 +51,18 @@ public class Product {
     @Expose
     private Integer totPen;
 
+    @SerializedName("custConnected")
+    @Expose
+    private Boolean isConnected;
+
+    public Boolean getConnected() {
+        return isConnected;
+    }
+
+    public void setConnected(Boolean connected) {
+        isConnected = connected;
+    }
+
     public Integer getUniqueId() {
         return uniqueId;
     }
