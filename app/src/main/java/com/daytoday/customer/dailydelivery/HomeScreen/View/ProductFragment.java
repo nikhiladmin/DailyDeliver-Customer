@@ -25,37 +25,40 @@ import java.util.List;
 public class ProductFragment extends Fragment {
     RecyclerView product_list;
     ProgressBar progressBar;
+    View view;
+    ProductViewModel viewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_product, container, false);
-        product_list = view.findViewById(R.id.product_list);
-        if(!isConnectedNetwork(getActivity()))
-        {
-            Log.e("TAG", "onCreateView: "+isConnectedNetwork(getActivity()) );
-            Snackbar.make(getActivity().findViewById(android.R.id.content),"Please Check your Internet Connection",Snackbar.LENGTH_LONG).show();
+        if (view == null) {
+            view = inflater.inflate(R.layout.fragment_product, container, false);
         }
-        progressBar=view.findViewById(R.id.prgbar);
+        product_list = view.findViewById(R.id.product_list);
+        if (!isConnectedNetwork(getActivity())) {
+            Log.e("TAG", "onCreateView: " + isConnectedNetwork(getActivity()));
+            Snackbar.make(getActivity().findViewById(android.R.id.content), "Please Check your Internet Connection", Snackbar.LENGTH_LONG).show();
+        }
+        progressBar = view.findViewById(R.id.prgbar);
         product_list.setHasFixedSize(true);
         product_list.setLayoutManager(new LinearLayoutManager(getContext()));
-        ProductViewModel viewModel = new ViewModelProvider(this).get(ProductViewModel.class);
+        viewModel = new ViewModelProvider(this).get(ProductViewModel.class);
         progressBar.setVisibility(View.VISIBLE);
         viewModel.getProduct().observe(getViewLifecycleOwner(), new Observer<List<Product>>() {
             @Override
             public void onChanged(List<Product> products) {
-                ProductAdapter adapter = new ProductAdapter(products,getContext());
+                ProductAdapter adapter = new ProductAdapter(products, getContext());
                 product_list.setAdapter(adapter);
-               progressBar.setVisibility(View.GONE);
+                progressBar.setVisibility(View.GONE);
             }
         });
         return view;
     }
 
 
-    public static boolean isConnectedNetwork (Context context) {
+    public static boolean isConnectedNetwork(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        return cm.getActiveNetworkInfo () != null && cm.getActiveNetworkInfo ().isConnectedOrConnecting ();
+        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnectedOrConnecting();
     }
 }

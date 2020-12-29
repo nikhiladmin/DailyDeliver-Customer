@@ -60,13 +60,24 @@ public class DatesRepo {
     }
 
     public MutableLiveData<List<Dates>> requestAcceptedList(String busscustId) {
+        rejectLiveDataApi = new MutableLiveData<>();
+        pendingLiveDataApi = new MutableLiveData<>();
+
         MutableLiveData<List<Dates>> liveData = new MutableLiveData<>();
         ApiInterface apiInterface = Client.getClient().create(ApiInterface.class);
         Call<DayWiseResponse> dayWiseResponseCall = apiInterface.getDayWise(busscustId);
         dayWiseResponseCall.enqueue(new Callback<DayWiseResponse>() {
             @Override
             public void onResponse(Call<DayWiseResponse> call, Response<DayWiseResponse> response) {
-                if (response.body().getError()){
+                if (!response.body().getError()){
+                    for(int i=0;i<response.body().getRejected().size();i++)
+                    {
+                        response.body().getRejected().get(i).convertDates();
+                    }
+                    rejectLiveDataApi.setValue(response.body().getRejected());
+                    List<Dates> dates = response.body().getAccepted();
+                    for(int i=0;i<dates.size();i++)
+                        response.body().getAccepted().get(i).convertDates();
                     liveData.setValue(response.body().getAccepted());
                 }
             }
@@ -78,6 +89,8 @@ public class DatesRepo {
         });
         return liveData;
     }
+    public MutableLiveData<List<Dates>> rejectLiveDataApi;
+    public MutableLiveData<List<Dates>> pendingLiveDataApi;
 
     public MutableLiveData<List<Dates>> requestCancelledList(String busscustId) {
         MutableLiveData<List<Dates>> liveData = new MutableLiveData<>();

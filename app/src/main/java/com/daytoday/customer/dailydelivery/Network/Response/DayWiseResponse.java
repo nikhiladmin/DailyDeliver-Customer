@@ -14,6 +14,30 @@ public class DayWiseResponse {
     @Expose
     private List<Dates> accepted = null;
 
+    @SerializedName("pending")
+    @Expose
+    private List<Dates> pending = null;
+
+    @SerializedName("rejected")
+    @Expose
+    private List<Dates> rejected = null;
+
+    public List<Dates> getPending() {
+        return pending;
+    }
+
+    public void setPending(List<Dates> pending) {
+        this.pending = pending;
+    }
+
+    public List<Dates> getRejected() {
+        return rejected;
+    }
+
+    public void setRejected(List<Dates> rejected) {
+        this.rejected = rejected;
+    }
+
     public Boolean getError() {
         return error;
     }

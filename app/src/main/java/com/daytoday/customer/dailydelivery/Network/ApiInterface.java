@@ -26,10 +26,10 @@ public interface ApiInterface {
     Call<YesNoResponse> addBussCustDetails(@Query("bussid") String bussId,@Query("custid") String custId);
 
     @GET("insert-accepted")
-    Call<YesNoResponse> addAcceptedRequest(@Query("bussUserId") String bussUserId,@Query("quantity") String quantity);
+    Call<YesNoResponse> addAcceptedRequest(@Query("bussUserId") String bussUserId,@Query("quantity") String quantity,@Query("date")String date);
 
     @GET("insert-rejected")
-    Call<YesNoResponse> addRejectedRequest(@Query("bussUserId") String bussUserId,@Query("quantity") String quantity);
+    Call<YesNoResponse> addRejectedRequest(@Query("bussUserId") String bussUserId,@Query("quantity") String quantity,@Query("date")String date);
 
     @GET("fetch-buss-list-cust")
     Call<BussDetailsResponse> getBussList(@Query("bussid") String bussId,@Query("custid") String custid);
