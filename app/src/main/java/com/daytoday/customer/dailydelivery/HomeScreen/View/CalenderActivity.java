@@ -71,14 +71,21 @@ public class CalenderActivity extends AppCompatActivity {
                 builder.show();
             }
         });
-
         datesViewModel.getAcceptedList().observe(this, new Observer<List<Dates>>() {
             @Override
             public void onChanged(List<Dates> dates) {
+                //todo string to date change
+                datesViewModel.rejectDataFromApi().observe(CalenderActivity.this, rejecteddates -> {
+                    CircleDecorator rejectDeco = new CircleDecorator(CalenderActivity.this,R.drawable.canceled_color,rejecteddates);
+                    calendarView.addDecorator(rejectDeco);
+                });
                 CircleDecorator decorator = new CircleDecorator(CalenderActivity.this,R.drawable.accepted_color,dates);
                 calendarView.addDecorators(decorator);
             }
         });
+
+
+
 
         datesViewModel.getCancelledList().observe(this, new Observer<List<Dates>>() {
             @Override
@@ -111,6 +118,7 @@ public class CalenderActivity extends AppCompatActivity {
         };
         HashMap<String,String> value = new HashMap<>();
         String currDate = "" + day.getYear() + day.getMonth() + day.getDay();
+        String databaseDate=""+day.getYear()+day.getMonth()+(day.getDay()<=9 ? "0"+day.getDay():day.getDay());
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         value.put("Year", String.valueOf(day.getYear()));
         value.put("Mon", String.valueOf(day.getMonth()));
@@ -127,7 +135,7 @@ public class CalenderActivity extends AppCompatActivity {
                             value.put("quantity",quantity);
                             reference.child("Buss_Cust_DayWise").child(busscustID).child("Rejected")
                                     .child(currDate).setValue(value);
-                            Call<YesNoResponse> addRejectedRequest = apiInterface.addRejectedRequest(busscustID,quantity);
+                            Call<YesNoResponse> addRejectedRequest = apiInterface.addRejectedRequest(busscustID,quantity,databaseDate);
                             addRejectedRequest.enqueue(addRejectedRequestCall);
                         }
                     }
@@ -156,6 +164,7 @@ public class CalenderActivity extends AppCompatActivity {
         };
         HashMap<String,String> value = new HashMap<>();
         String currDate = "" + day.getYear() + day.getMonth() + day.getDay();
+        String databaseDate=""+day.getYear()+day.getMonth()+(day.getDay()<= 9 ? "0"+day.getDay():day.getDay());
         FirebaseUser curruser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 //        value.put("Year", String.valueOf(day.getYear()));
@@ -173,8 +182,8 @@ public class CalenderActivity extends AppCompatActivity {
                             //value.put("quantity",quantity);
                             //reference.child("Buss_Cust_DayWise").child(bussID).child(custID).child("Accepted")
                             //        .child(currDate).setValue(value);
-                            Log.i("msg","done " + quantity);
-                            Call<YesNoResponse> addAcceptedRequest = apiInterface.addAcceptedRequest(busscustID,quantity);
+                            Log.i("msg","done " + quantity+currDate);
+                            Call<YesNoResponse> addAcceptedRequest = apiInterface.addAcceptedRequest(busscustID,quantity,databaseDate);
                             addAcceptedRequest.enqueue(addAcceptedCallback);
                         }
                     }

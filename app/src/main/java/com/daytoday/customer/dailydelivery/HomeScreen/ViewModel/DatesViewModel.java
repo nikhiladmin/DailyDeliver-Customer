@@ -37,4 +37,14 @@ public class DatesViewModel extends ViewModel {
         canceledlivedata = datesRepo.requestCancelledList(busscustId);
         return canceledlivedata;
     }
+
+    public MutableLiveData<List<Dates>> rejectDataFromApi()
+    {
+        return datesRepo.rejectLiveDataApi;
+    }
+
+    public MutableLiveData<List<Dates>> pendingDataFromApi()
+    {
+        return datesRepo.pendingLiveDataApi;
+    }
 }
