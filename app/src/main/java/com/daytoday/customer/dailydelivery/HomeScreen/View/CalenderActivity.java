@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.daytoday.customer.dailydelivery.CalendarBottomSheet;
 import com.daytoday.customer.dailydelivery.Dates;
 import com.daytoday.customer.dailydelivery.HomeScreen.ViewModel.DatesViewModel;
 import com.daytoday.customer.dailydelivery.Network.ApiInterface;
@@ -38,6 +39,7 @@ public class CalenderActivity extends AppCompatActivity {
     MaterialCalendarView calendarView;
     String bussID,custID,bussCustId;
     ApiInterface apiInterface;
+    List<Dates> pendingDates;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,21 +56,33 @@ public class CalenderActivity extends AppCompatActivity {
         calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-                CalendarDay day = CalendarDay.from(date.getYear(),date.getMonth(),date.getDay());
-                AlertDialog.Builder builder = new AlertDialog.Builder(CalenderActivity.this);
-                builder.setTitle("Accept").setMessage("Do you Accept The Product");;
-                builder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        SendToAccept(date,bussCustId);
+//                CalendarDay day = CalendarDay.from(date.getYear(),date.getMonth(),date.getDay());
+//                AlertDialog.Builder builder = new AlertDialog.Builder(CalenderActivity.this);
+//                builder.setTitle("Accept").setMessage("Do you Accept The Product");;
+//                builder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        SendToAccept(date,bussCustId);
+//                    }
+//                }).setNegativeButton("Reject", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        sendToReject(date,bussCustId);
+//                    }
+//                });
+//                builder.show();
+                for(int i=0;i<pendingDates.size();i++)
+                {
+                    Log.e("TAG",""+pendingDates.get(i).getDate()+"  "+date);
+                    if(pendingDates.get(i).getDate().equals(date))
+                    {
+                        Log.e("TAG","GOT IT");
                     }
-                }).setNegativeButton("Reject", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        sendToReject(date,bussCustId);
-                    }
-                });
-                builder.show();
+                }
+                CalendarBottomSheet calendarBottomSheet = new CalendarBottomSheet(pendingDates);
+                Bundle bundle = new Bundle();
+                calendarBottomSheet.setArguments(bundle);
+                calendarBottomSheet.show(getSupportFragmentManager(),"CalendarActivity");
             }
         });
         datesViewModel.getAcceptedList().observe(this, new Observer<List<Dates>>() {
@@ -100,6 +114,7 @@ public class CalenderActivity extends AppCompatActivity {
             public void onChanged(List<Dates> dates) {
                 CircleDecorator decorator = new CircleDecorator(CalenderActivity.this, R.drawable.pending_color, dates);
                 calendarView.addDecorator(decorator);
+                pendingDates = dates;
             }
         });
     }
