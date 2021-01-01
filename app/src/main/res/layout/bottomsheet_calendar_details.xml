@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:padding="10dp">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/new_req_made"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Request is made on " />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/new_req_made"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/rounded_background"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:text="Pending"
+                android:textColor="@color/colorWhite" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/quantity_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/new_req_made"
+                android:layout_marginTop="15sp"
+                android:text="Quantity"
+                android:textSize="28sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/quantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/quantity_label"
+                android:layout_alignParentRight="true"
+                android:text="1"
+                android:textSize="28sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/total_price_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/quantity_label"
+                android:layout_marginTop="15sp"
+                android:text="Price"
+                android:textSize="28sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/total_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/total_price_label"
+                android:layout_alignParentRight="true"
+                android:text="20"
+                android:textSize="28sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/total_price_label"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/accept_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:backgroundTint="@color/colorApproved"
+                    android:text="Accept"
+                    android:textAllCaps="false" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/reject_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20sp"
+                    android:textAllCaps="false"
+                    android:layout_toLeftOf="@id/accept_button"
+                    android:backgroundTint="@color/colorReject"
+                    android:text="Reject" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</layout>
