@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.daytoday.customer.dailydelivery.searchui.SearchFragment;
+
 public class BottomTabAdapter extends FragmentPagerAdapter {
     Context context;
     int totaltabs;
