@@ -28,6 +28,9 @@ public class ProductFragment extends Fragment {
     View view;
     ProductViewModel viewModel;
 
+    public ProductFragment() {
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
