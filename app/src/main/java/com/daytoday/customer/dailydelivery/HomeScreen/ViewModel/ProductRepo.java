@@ -76,7 +76,6 @@ public class ProductRepo {
         custRelBussResponseCall.enqueue(new Callback<CustRelBussResponse>() {
             @Override
             public void onResponse(Call<CustRelBussResponse> call, Response<CustRelBussResponse> response) {
-                Log.e("message" , " Response Successful " + response.body().getCust());
                 mutableLiveData.setValue(response.body().getCust());
             }
 
