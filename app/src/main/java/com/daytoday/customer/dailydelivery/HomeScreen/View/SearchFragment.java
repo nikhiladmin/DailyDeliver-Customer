@@ -12,6 +12,10 @@ import com.daytoday.customer.dailydelivery.R;
 
 public class SearchFragment extends Fragment {
     RecyclerView recyclerView;
+
+    public SearchFragment() {
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
