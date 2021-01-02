@@ -1,10 +1,15 @@
 package com.daytoday.customer.dailydelivery.Network;
 
 import com.daytoday.customer.dailydelivery.Network.Response.*;
+import com.daytoday.customer.dailydelivery.searchui.SearchResponseModel;
+
+import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 
 public interface ApiInterface {
 
@@ -54,4 +59,6 @@ public interface ApiInterface {
 
     @GET("fetch-daywise")
     Call<DayWiseResponse> getDayWise(@Query("busscustid") String bussCustId);
+    @GET("/v1/explore-business")
+    Call<SearchResponseModel> getSearch(@QueryMap Map<String,String> map);
 }
