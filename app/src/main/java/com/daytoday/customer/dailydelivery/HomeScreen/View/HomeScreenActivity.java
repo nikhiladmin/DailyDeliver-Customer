@@ -1,10 +1,10 @@
 package com.daytoday.customer.dailydelivery.HomeScreen.View;
 
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +13,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
+
 import com.daytoday.customer.dailydelivery.Network.ApiInterface;
 import com.daytoday.customer.dailydelivery.Network.Client;
 import com.daytoday.customer.dailydelivery.Network.Response.BussDetailsResponse;
@@ -20,6 +26,7 @@ import com.daytoday.customer.dailydelivery.Network.Response.YesNoResponse;
 import com.daytoday.customer.dailydelivery.R;
 import com.daytoday.customer.dailydelivery.Utilities.AppConstants;
 import com.daytoday.customer.dailydelivery.Utilities.SaveOfflineManager;
+import com.daytoday.customer.dailydelivery.ViewPagerAdapter;
 import com.daytoday.customer.dailydelivery.searchui.SearchFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,6 +41,12 @@ public class HomeScreenActivity extends AppCompatActivity implements BottomNavig
     BottomNavigationView bottomNavigationView;
     Toolbar toolbar;
     ApiInterface apiInterface;
+    ViewPager viewPager2;
+    MenuItem prevMenuItem;
+    ProductFragment productFragment;
+    SearchFragment searchFragment;
+    NotificationFragment notificationFragment;
+    UserFragment userFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,30 +56,65 @@ public class HomeScreenActivity extends AppCompatActivity implements BottomNavig
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         toolbar=findViewById(R.id.toolbar_home);
+        viewPager2 = findViewById(R.id.ViewPager);
         apiInterface = Client.getClient().create(ApiInterface.class);
         setSupportActionBar(toolbar);
-        if(savedInstanceState==null)
-        {
-            getSupportFragmentManager().beginTransaction().replace(R.id.switchFragment, new ProductFragment()).commit();
-        }
+        viewPager2.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (prevMenuItem != null) {
+                    prevMenuItem.setChecked(false);
+                } else {
+                    bottomNavigationView.getMenu().getItem(0).setChecked(false);
+                }
+                bottomNavigationView.getMenu().getItem(position).setChecked(true);
+                prevMenuItem = bottomNavigationView.getMenu().getItem(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        setupViewPager(viewPager2);
     }
+
+    public void setupViewPager(ViewPager viewPager2)
+    {
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        productFragment = new ProductFragment();
+        searchFragment = new SearchFragment();
+        notificationFragment = new NotificationFragment();
+        userFragment = new UserFragment();
+        viewPagerAdapter.addFragment(productFragment);
+        viewPagerAdapter.addFragment(searchFragment);
+        viewPagerAdapter.addFragment(notificationFragment);
+        viewPagerAdapter.addFragment(userFragment);
+        viewPager2.setAdapter(viewPagerAdapter);
+    }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.myproducts:
-                getSupportFragmentManager().beginTransaction().replace(R.id.switchFragment, new ProductFragment()).commit();
+                viewPager2.setCurrentItem(0);
                 break;
             case R.id.search:
-                getSupportFragmentManager().beginTransaction().replace(R.id.switchFragment, new SearchFragment()).commit();
+                viewPager2.setCurrentItem(1);
                 break;
             case R.id.notification:
-                getSupportFragmentManager().beginTransaction().replace(R.id.switchFragment, new NotificationFragment()).commit();
+                viewPager2.setCurrentItem(2);
                 break;
             case R.id.myprofile:
-                getSupportFragmentManager().beginTransaction().replace(R.id.switchFragment, new UserFragment()).commit();
+                viewPager2.setCurrentItem(3);
                 break;
         }
-        return true;
+        return false;
     }
 
     //-------------------------inflating search icon on navigation bar-------------------------------------

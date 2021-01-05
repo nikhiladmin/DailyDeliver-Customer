@@ -29,6 +29,9 @@ public class ProductFragment extends Fragment {
     ProductViewModel viewModel;
     View noBussView;
 
+    public ProductFragment() {
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
