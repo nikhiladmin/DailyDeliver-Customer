@@ -1,9 +1,12 @@
 package com.daytoday.customer.dailydelivery.HomeScreen.Model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Product {
+public class Product implements Parcelable {
 
     @SerializedName("uniqueId")
     @Expose
@@ -54,6 +57,117 @@ public class Product {
     @SerializedName("custConnected")
     @Expose
     private Boolean isConnected;
+
+    protected Product(Parcel in) {
+        if (in.readByte() == 0) {
+            uniqueId = null;
+        } else {
+            uniqueId = in.readInt();
+        }
+        bussId = in.readString();
+        custId = in.readString();
+        bussuserid = in.readString();
+        name = in.readString();
+        phoneno = in.readString();
+        address = in.readString();
+        if (in.readByte() == 0) {
+            price = null;
+        } else {
+            price = in.readInt();
+        }
+        dOrM = in.readString();
+        payment = in.readString();
+        imgurl = in.readString();
+        if (in.readByte() == 0) {
+            noOfCust = null;
+        } else {
+            noOfCust = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            totCan = null;
+        } else {
+            totCan = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            totEarn = null;
+        } else {
+            totEarn = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            totPen = null;
+        } else {
+            totPen = in.readInt();
+        }
+        byte tmpIsConnected = in.readByte();
+        isConnected = tmpIsConnected == 0 ? null : tmpIsConnected == 1;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        if (uniqueId == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(uniqueId);
+        }
+        dest.writeString(bussId);
+        dest.writeString(custId);
+        dest.writeString(bussuserid);
+        dest.writeString(name);
+        dest.writeString(phoneno);
+        dest.writeString(address);
+        if (price == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(price);
+        }
+        dest.writeString(dOrM);
+        dest.writeString(payment);
+        dest.writeString(imgurl);
+        if (noOfCust == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(noOfCust);
+        }
+        if (totCan == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(totCan);
+        }
+        if (totEarn == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(totEarn);
+        }
+        if (totPen == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(totPen);
+        }
+        dest.writeByte((byte) (isConnected == null ? 0 : isConnected ? 1 : 2));
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Product> CREATOR = new Creator<Product>() {
+        @Override
+        public Product createFromParcel(Parcel in) {
+            return new Product(in);
+        }
+
+        @Override
+        public Product[] newArray(int size) {
+            return new Product[size];
+        }
+    };
 
     public Boolean getConnected() {
         return isConnected;
