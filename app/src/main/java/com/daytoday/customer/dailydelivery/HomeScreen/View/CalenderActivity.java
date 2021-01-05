@@ -1,24 +1,33 @@
 package com.daytoday.customer.dailydelivery.HomeScreen.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.daytoday.customer.dailydelivery.CalendarBottomSheet;
 import com.daytoday.customer.dailydelivery.Dates;
+import com.daytoday.customer.dailydelivery.HomeScreen.Model.Transaction;
 import com.daytoday.customer.dailydelivery.HomeScreen.ViewModel.DatesViewModel;
 import com.daytoday.customer.dailydelivery.Network.ApiInterface;
 import com.daytoday.customer.dailydelivery.Network.Client;
 import com.daytoday.customer.dailydelivery.Network.Response.YesNoResponse;
 import com.daytoday.customer.dailydelivery.R;
 import com.daytoday.customer.dailydelivery.Utilities.AppConstants;
+import com.daytoday.customer.dailydelivery.Utilities.AppUtils;
+import com.daytoday.customer.dailydelivery.Utilities.FirebaseUtils;
+import com.daytoday.customer.dailydelivery.Utilities.Request;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,6 +36,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 
 import java.util.HashMap;
 import java.util.List;
@@ -39,179 +49,96 @@ public class CalenderActivity extends AppCompatActivity {
     MaterialCalendarView calendarView;
     String bussID,custID,bussCustId;
     ApiInterface apiInterface;
-    List<Dates> pendingDates;
+    DatesViewModel datesViewModel;
+    ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calender);
         bussCustId = "" + getIntent().getStringExtra("buisness-customer-Id");
-        Log.i("msg","shuvam " + bussCustId);
         bussID  = getIntent().getStringExtra("buisness-Id");
         custID = getIntent().getStringExtra("Customer-Id");
         getSupportActionBar().setTitle("Calender");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         calendarView = findViewById(R.id.calendar);
-        DatesViewModel datesViewModel = new DatesViewModel(bussCustId);
+        progressBar = findViewById(R.id.progress_bar);
+        progressBar.setVisibility(View.VISIBLE);
+        datesViewModel = new DatesViewModel(bussCustId);
         apiInterface = Client.getClient().create(ApiInterface.class);
+
         calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-//                CalendarDay day = CalendarDay.from(date.getYear(),date.getMonth(),date.getDay());
-//                AlertDialog.Builder builder = new AlertDialog.Builder(CalenderActivity.this);
-//                builder.setTitle("Accept").setMessage("Do you Accept The Product");;
-//                builder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        SendToAccept(date,bussCustId);
-//                    }
-//                }).setNegativeButton("Reject", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        sendToReject(date,bussCustId);
-//                    }
-//                });
-//                builder.show();
-                for(int i=0;i<pendingDates.size();i++)
-                {
-                    Log.e("TAG",""+pendingDates.get(i).getDate()+"  "+date);
-                    if(pendingDates.get(i).getDate().equals(date))
-                    {
-                        Log.e("TAG","GOT IT");
+                CalendarDay day = CalendarDay.from(date.getYear(),date.getMonth(),date.getDay());
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    Transaction transaction = datesViewModel.getTransaction(day);
+                    if (transaction != null) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(CalenderActivity.this);
+                        builder.setTitle("Accept").setMessage("Do you Accept The Product");
+                        ;
+                        builder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                SendToAccept(date,transaction);
+                            }
+                        }).setNegativeButton("Reject", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                sendToReject(date,transaction);
+                            }
+                        });
+                        builder.show();
                     }
                 }
-                CalendarBottomSheet calendarBottomSheet = new CalendarBottomSheet(pendingDates);
-                Bundle bundle = new Bundle();
-                calendarBottomSheet.setArguments(bundle);
-                calendarBottomSheet.show(getSupportFragmentManager(),"CalendarActivity");
-            }
-        });
-        datesViewModel.getAcceptedList().observe(this, new Observer<List<Dates>>() {
-            @Override
-            public void onChanged(List<Dates> dates) {
-                //todo string to date change
-                datesViewModel.rejectDataFromApi().observe(CalenderActivity.this, rejecteddates -> {
-                    CircleDecorator rejectDeco = new CircleDecorator(CalenderActivity.this,R.drawable.canceled_color,rejecteddates);
-                    calendarView.addDecorator(rejectDeco);
-                });
-                CircleDecorator decorator = new CircleDecorator(CalenderActivity.this,R.drawable.accepted_color,dates);
-                calendarView.addDecorators(decorator);
             }
         });
 
-
-
-
-        datesViewModel.getCancelledList().observe(this, new Observer<List<Dates>>() {
+        datesViewModel.getTotalList(calendarView.getCurrentDate()).observe(this, new Observer<List<Transaction>>() {
             @Override
-            public void onChanged(List<Dates> dates) {
-                CircleDecorator decorator = new CircleDecorator(CalenderActivity.this,R.drawable.canceled_color,dates);
-                calendarView.addDecorators(decorator);
+            public void onChanged(List<Transaction> transactions) {
+                calendarView.removeDecorators();
+                for (Transaction transaction : transactions) {
+                    Log.i("message","transaction is " +transaction.toString());
+                    int drawableResourceId = AppUtils.getResourceIdDates(transaction.getStatus());
+                    CircleDecorator decorator = new CircleDecorator(CalenderActivity.this,drawableResourceId,transaction);
+                    calendarView.addDecorator(decorator);
+                }
             }
         });
 
-        datesViewModel.getPendingList().observe(this, new Observer<List<Dates>>() {
+        calendarView.setOnMonthChangedListener(new OnMonthChangedListener() {
             @Override
-            public void onChanged(List<Dates> dates) {
-                CircleDecorator decorator = new CircleDecorator(CalenderActivity.this, R.drawable.pending_color, dates);
-                calendarView.addDecorator(decorator);
-                pendingDates = dates;
+            public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
+                datesViewModel.getTotalList(date);
+            }
+        });
+
+        datesViewModel.isLoading.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isLoading) {
+                progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
             }
         });
     }
 
-    private void sendToReject(CalendarDay day,String busscustID) {
-        Callback<YesNoResponse> addRejectedRequestCall = new Callback<YesNoResponse>() {
-            @Override
-            public void onResponse(Call<YesNoResponse> call, Response<YesNoResponse> response) {
-                Log.i("message","Response Successful " + response.body().getMessage());
-            }
-
-            @Override
-            public void onFailure(Call<YesNoResponse> call, Throwable t) {
-                Log.i(AppConstants.ERROR_LOG,"Some Error Occurred in CalenderActivity Error is : {" + t.getMessage() + " }");
-            }
-        };
-        HashMap<String,String> value = new HashMap<>();
-        String currDate = "" + day.getYear() + day.getMonth() + day.getDay();
-        String databaseDate=""+day.getYear()+day.getMonth()+(day.getDay()<=9 ? "0"+day.getDay():day.getDay());
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        value.put("Year", String.valueOf(day.getYear()));
-        value.put("Mon", String.valueOf(day.getMonth()));
-        value.put("Day", String.valueOf(day.getDay()));
-
-        reference.child("Buss_Cust_DayWise").child(busscustID).child("Pending")
-                .child(currDate)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.getValue() != null)
-                        {
-                            String quantity = dataSnapshot.child("quantity").getValue().toString();
-                            value.put("quantity",quantity);
-                            reference.child("Buss_Cust_DayWise").child(busscustID).child("Rejected")
-                                    .child(currDate).setValue(value);
-                            Call<YesNoResponse> addRejectedRequest = apiInterface.addRejectedRequest(busscustID,quantity,databaseDate);
-                            addRejectedRequest.enqueue(addRejectedRequestCall);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-        reference.child("Buss_Cust_DayWise").child(busscustID).child("Pending")
-                .child(currDate).removeValue();
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void sendToReject(CalendarDay day, Transaction transaction) {
+        HashMap<String,String> value = FirebaseUtils.getValueMapOfRequest(day,transaction.getQuantity(), Request.REJECTED);
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Buss_Cust_DayWise").child(bussCustId);
+        reference.child(FirebaseUtils.getDatePath(day))
+                .setValue(value);
+        FirebaseUtils.incrementAccToReq(day,reference,Request.REJECTED);
+        FirebaseUtils.decrementAccToReq(day,reference,Request.PENDING);
     }
 
-    private void SendToAccept(CalendarDay day,String busscustID) {
-        //TODO Accept The Buisness
-        Callback<YesNoResponse> addAcceptedCallback = new Callback<YesNoResponse>() {
-            @Override
-            public void onResponse(Call<YesNoResponse> call, Response<YesNoResponse> response) {
-                Log.i("message","Response Successful " + response.body().getMessage());
-            }
-
-            @Override
-            public void onFailure(Call<YesNoResponse> call, Throwable t) {
-                Log.i(AppConstants.ERROR_LOG,"Some Error Occurred in CalenderActivity Error is : {" + t.getMessage() + " }");
-            }
-        };
-        HashMap<String,String> value = new HashMap<>();
-        String currDate = "" + day.getYear() + day.getMonth() + day.getDay();
-        String databaseDate=""+day.getYear()+day.getMonth()+(day.getDay()<= 9 ? "0"+day.getDay():day.getDay());
-        FirebaseUser curruser = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-//        value.put("Year", String.valueOf(day.getYear()));
-//        value.put("Mon", String.valueOf(day.getMonth()));
-//        value.put("Day", String.valueOf(day.getDay()));
-
-        reference.child("Buss_Cust_DayWise").child(busscustID).child("Pending")
-                .child(currDate)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.getValue() != null)
-                        {
-                            String quantity = dataSnapshot.child("quantity").getValue().toString();
-                            //value.put("quantity",quantity);
-                            //reference.child("Buss_Cust_DayWise").child(bussID).child(custID).child("Accepted")
-                            //        .child(currDate).setValue(value);
-                            Log.i("msg","done " + quantity+currDate);
-                            Call<YesNoResponse> addAcceptedRequest = apiInterface.addAcceptedRequest(busscustID,quantity,databaseDate);
-                            addAcceptedRequest.enqueue(addAcceptedCallback);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-        reference.child("Buss_Cust_DayWise").child(busscustID).child("Pending")
-                .child(currDate).removeValue();
-        reference.child("Buss_Cust_DayWise").child(busscustID).child("Rejected")
-                .child(currDate).removeValue();
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void SendToAccept(CalendarDay day, Transaction transaction) {
+        HashMap<String,String> value = FirebaseUtils.getValueMapOfRequest(day,transaction.getQuantity(), Request.ACCEPTED);
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Buss_Cust_DayWise").child(bussCustId);
+        reference.child(FirebaseUtils.getDatePath(day))
+                .setValue(value);
+        FirebaseUtils.incrementAccToReq(day,reference,Request.ACCEPTED);
+        FirebaseUtils.decrementAccToReq(day,reference,Request.PENDING);
     }
 
 

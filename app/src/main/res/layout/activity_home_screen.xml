@@ -45,9 +45,8 @@
                 </RelativeLayout>
             </com.google.android.material.appbar.MaterialToolbar>
         </com.google.android.material.appbar.AppBarLayout>
-
-        <FrameLayout
-            android:id="@+id/switchFragment"
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/ViewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/appbar_layout"
