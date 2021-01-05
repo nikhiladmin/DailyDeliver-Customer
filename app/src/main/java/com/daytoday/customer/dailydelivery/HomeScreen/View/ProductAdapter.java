@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.daytoday.customer.dailydelivery.HomeScreen.Model.Product;
 import com.daytoday.customer.dailydelivery.R;
 import com.google.android.material.card.MaterialCardView;
@@ -37,7 +38,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     @NonNull
     @Override
     public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View inflater = LayoutInflater.from(context).inflate(R.layout.single_product,parent,false);
+        View inflater = LayoutInflater.from(context).inflate(R.layout.single_product, parent, false);
         return new ProductViewHolder(inflater);
     }
 
@@ -48,30 +49,25 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         holder.price.setText("Rs. " + buss_list.get(position).getPrice() + " - " + buss_list.get(position).getDOrM());
         // holder.customers.setText("( " + buss_list.get(position).getCust_cout() + " Customers )");
         if (buss_list.get(position).getImgurl() != null) {
-        Picasso.get()
-                .load(buss_list.get(position).getImgurl())
-                .resize(5000, 5000)
-                .centerCrop()
-                .into(holder.buss_img);
-        holder.call_img.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            Glide.with(context).load(buss_list.get(position).getImgurl()).error(R.drawable.box001).into(holder.buss_img);
+        }
+        if (buss_list.get(position).getPhoneno() != null) {
+            holder.call_img.setOnClickListener(v -> {
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse("tel:" + buss_list.get(position).getPhoneno()));
                 v.getContext().startActivity(intent);
-            }
-        });
+            });
+        }else
+        {
+            holder.call_img.setVisibility(View.GONE);
         }
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(),CalenderActivity.class);
-                Log.i("msg" ,buss_list.get(position).toString());
-                intent.putExtra("buisness-customer-Id","" + buss_list.get(position).getUniqueId());
-                intent.putExtra("buisness-Id",buss_list.get(position).getBussId());
-                intent.putExtra("Customer-Id",currUser.getUid());
-                context.startActivity(intent);
-            }
+        holder.cardView.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(),CalenderActivity.class);
+            Log.i("msg" ,buss_list.get(position).toString());
+            intent.putExtra("buisness-customer-Id","" + buss_list.get(position).getUniqueId());
+            intent.putExtra("buisness-Id",buss_list.get(position).getBussId());
+            intent.putExtra("Customer-Id",currUser.getUid());
+            context.startActivity(intent);
         });
     }
 
@@ -82,9 +78,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     public class ProductViewHolder extends RecyclerView.ViewHolder {
         Button buss_status_btn;
-        TextView buss_name,buss_add,price,customers;
-        ImageView buss_img,call_img;
+        TextView buss_name, buss_add, price, customers;
+        ImageView buss_img, call_img;
         MaterialCardView cardView;
+
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
             buss_add = itemView.findViewById(R.id.buss_address);
@@ -93,7 +90,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             buss_name = itemView.findViewById(R.id.buss_name);
             buss_img = itemView.findViewById(R.id.buss_img);
             call_img = itemView.findViewById(R.id.call_buss_btn);
-            cardView=itemView.findViewById(R.id.producardview);
+            cardView = itemView.findViewById(R.id.producardview);
         }
     }
 }
