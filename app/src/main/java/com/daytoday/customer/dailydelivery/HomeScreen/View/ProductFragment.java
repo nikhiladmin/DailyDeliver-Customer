@@ -27,6 +27,7 @@ public class ProductFragment extends Fragment {
     ProgressBar progressBar;
     View view;
     ProductViewModel viewModel;
+    View noBussView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,12 +46,18 @@ public class ProductFragment extends Fragment {
         product_list.setLayoutManager(new LinearLayoutManager(getContext()));
         viewModel = new ViewModelProvider(this).get(ProductViewModel.class);
         progressBar.setVisibility(View.VISIBLE);
+        noBussView = view.findViewById(R.id.noBusslayout);
         viewModel.getProduct().observe(getViewLifecycleOwner(), new Observer<List<Product>>() {
             @Override
             public void onChanged(List<Product> products) {
                 ProductAdapter adapter = new ProductAdapter(products, getContext());
                 product_list.setAdapter(adapter);
                 progressBar.setVisibility(View.GONE);
+                if(products.size()<=0)
+                {
+                    product_list.setVisibility(View.GONE);
+                    noBussView.setVisibility(View.VISIBLE);
+                }
             }
         });
         return view;
