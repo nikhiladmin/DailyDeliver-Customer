@@ -3,7 +3,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="20dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -15,14 +16,17 @@
                 android:id="@+id/new_req_made"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@id/statusText"
                 android:text="Request is made on " />
 
             <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/statusText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@id/new_req_made"
                 android:layout_alignParentRight="true"
-                android:background="@drawable/rounded_background"
+                android:background="@drawable/rounded_background_pending"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:text="Pending"
@@ -84,10 +88,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="20sp"
-                    android:textAllCaps="false"
                     android:layout_toLeftOf="@id/accept_button"
                     android:backgroundTint="@color/colorReject"
-                    android:text="Reject" />
+                    android:text="Reject"
+                    android:textAllCaps="false" />
             </RelativeLayout>
 
         </RelativeLayout>
