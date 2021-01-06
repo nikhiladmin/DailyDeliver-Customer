@@ -70,10 +70,12 @@
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/product_address"
-                    android:layout_width="wrap_content"
+                    android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:foregroundGravity="left"
                     android:gravity="start"
+                    android:maxLines="2"
+                    android:minLines="2"
                     android:text="hello world"
                     android:textColor="#000"
                     android:layout_marginTop="5dp"
