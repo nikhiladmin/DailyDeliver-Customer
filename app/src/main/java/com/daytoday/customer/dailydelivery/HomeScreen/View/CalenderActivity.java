@@ -53,13 +53,14 @@ public class CalenderActivity extends AppCompatActivity {
     public static final String CURRENT_PRODUCT = "CURRENT_PRODUCT";
     public static final String CUSTOMER_ID = "CUSTOMER_ID";
     MaterialCalendarView calendarView;
-    String bussID,custID,bussCustId;
+    String bussID, custID, bussCustId;
     ApiInterface apiInterface;
     DatesViewModel datesViewModel;
     ProgressBar progressBar;
     Product currentProduct;
-    CardView monthCardView,totalCardView;
-    MaterialTextView totalAccepted,totalRejected,totalPending,totalPriceTextView,currentMonthPriceTextView;
+    CardView monthCardView, totalCardView;
+    MaterialTextView totalAccepted, totalRejected, totalPending, totalPriceTextView, currentMonthPriceTextView;
+    MaterialTextView totalMonthAccepted, totalMonthRejected, totalMonthPending;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +70,7 @@ public class CalenderActivity extends AppCompatActivity {
         bussCustId = currentProduct.getUniqueId().toString();
         bussID = currentProduct.getBussId();
         custID = getIntent().getStringExtra(CUSTOMER_ID);
-        getSupportActionBar().setTitle(currentProduct.getName().toUpperCase()+"");
+        getSupportActionBar().setTitle(currentProduct.getName().toUpperCase() + "");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         calendarView = findViewById(R.id.calendar);
         progressBar = findViewById(R.id.progress_bar);
@@ -82,39 +83,40 @@ public class CalenderActivity extends AppCompatActivity {
         totalPending = findViewById(R.id.total_pending);
         totalRejected = findViewById(R.id.total_cancelled);
         totalPriceTextView = findViewById(R.id.total_price);
+        totalMonthAccepted = findViewById(R.id.month_accepted);
+        totalMonthPending = findViewById(R.id.month_pending);
+        totalMonthRejected = findViewById(R.id.month_cancelled);
         currentMonthPriceTextView = findViewById(R.id.current_month_price);
 
-        totalPriceTextView.setText("₹"+currentProduct.getPrice());
-        currentMonthPriceTextView.setText("₹"+currentProduct.getPrice());
+        totalPriceTextView.setText("₹" + currentProduct.getPrice());
+        currentMonthPriceTextView.setText("₹" + currentProduct.getPrice());
 
-        calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
-            @Override
-            public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-                CalendarDay day = CalendarDay.from(date.getYear(),date.getMonth(),date.getDay());
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    Transaction transaction = datesViewModel.getTransaction(day);
-                    if (transaction != null) {
-                        CalendarBottomSheet calendarBottomSheet = new CalendarBottomSheet(transaction,date);
-                        Bundle bundle = new Bundle();
-                        bundle.putParcelable(CURRENT_PRODUCT,currentProduct);
-                        calendarBottomSheet.setArguments(bundle);
-                        calendarBottomSheet.show(getSupportFragmentManager(),"CalendarActivity");
-                    }else
-                    {
-                        Snackbar.make(findViewById(android.R.id.content).getRootView(),"No transaction found on this date!",Snackbar.LENGTH_LONG).show();
-                    }
+        calendarView.setOnDateChangedListener((widget, date, selected) -> {
+            CalendarDay day = CalendarDay.from(date.getYear(), date.getMonth(), date.getDay());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                Transaction transaction = datesViewModel.getTransaction(day);
+                if (transaction != null) {
+                    CalendarBottomSheet calendarBottomSheet = new CalendarBottomSheet(transaction, date);
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable(CURRENT_PRODUCT, currentProduct);
+                    calendarBottomSheet.setArguments(bundle);
+                    calendarBottomSheet.show(getSupportFragmentManager(), "CalendarActivity");
+                } else {
+                    Snackbar.make(findViewById(android.R.id.content).getRootView(), "No transaction found on this date!", Snackbar.LENGTH_LONG).show();
                 }
             }
         });
 
+        datesViewModel.currentYear.setValue("" + calendarView.getCurrentDate().getYear());
+        datesViewModel.getCurrentYearTotal(calendarView.getCurrentDate());
         datesViewModel.getTotalList(calendarView.getCurrentDate()).observe(this, new Observer<List<Transaction>>() {
             @Override
             public void onChanged(List<Transaction> transactions) {
                 calendarView.removeDecorators();
                 for (Transaction transaction : transactions) {
-                    Log.i("message","transaction is " +transaction.toString());
+                    Log.i("message", "transaction is " + transaction.toString());
                     int drawableResourceId = AppUtils.getResourceIdDates(transaction.getStatus());
-                    CircleDecorator decorator = new CircleDecorator(CalenderActivity.this,drawableResourceId,transaction);
+                    CircleDecorator decorator = new CircleDecorator(CalenderActivity.this, drawableResourceId, transaction);
                     calendarView.addDecorator(decorator);
                 }
             }
@@ -124,6 +126,10 @@ public class CalenderActivity extends AppCompatActivity {
             @Override
             public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
                 datesViewModel.getTotalList(date);
+                if (!datesViewModel.currentYear.getValue().equals(date.getYear() + "")) {
+                    datesViewModel.currentYear.setValue(date.getYear() + "");
+                    datesViewModel.getCurrentYearTotal(date);
+                }
             }
         });
 
@@ -133,30 +139,50 @@ public class CalenderActivity extends AppCompatActivity {
                 progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
             }
         });
-        datesViewModel.totalAcceptedLiveData.observe(this, s -> totalAccepted.setText(""+s));
-        datesViewModel.totalRejectedLiveData.observe(this, s -> totalRejected.setText(""+s));
-        datesViewModel.totalPendingLiveData.observe(this, s -> totalPending.setText(""+s));
+
+        datesViewModel.totalAcceptedMonthlyLiveData.observe(this, s -> {
+            totalMonthAccepted.setText("" + s);
+            if (currentProduct != null && !currentProduct.getdOrM().isEmpty() && currentProduct.getdOrM().equals("D")) {
+                int thisMonthPrice = Integer.parseInt(s != null ? s : "0");
+                int singleProductPrice = currentProduct.getPrice();
+                currentMonthPriceTextView.setText("₹" + (thisMonthPrice * singleProductPrice));
+            }
+        });
+        datesViewModel.totalRejectedMonthlyLiveData.observe(this, s -> totalMonthRejected.setText("" + s));
+        datesViewModel.totalPendingMonthlyLiveData.observe(this, s -> totalMonthPending.setText("" + s));
+
+        datesViewModel.totalAcceptedYearlyLiveData.observe(this, s -> {
+            if (currentProduct != null && !currentProduct.getdOrM().isEmpty() && currentProduct.getdOrM().equals("D")) {
+                int thisYearPrice = Integer.parseInt(s != null ? s : "0");
+                int singleProductPrice = currentProduct.getPrice();
+                totalPriceTextView.setText("₹"+(thisYearPrice*singleProductPrice));
+            }
+            totalAccepted.setText("" + s);
+        });
+        datesViewModel.totalRejectedYearlyLiveData.observe(this, s -> totalRejected.setText("" + s));
+        datesViewModel.totalPendingYearlyLiveData.observe(this, s -> totalPending.setText("" + s));
+
 
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void sendToReject(CalendarDay day, Transaction transaction) {
-        HashMap<String,String> value = FirebaseUtils.getValueMapOfRequest(day,transaction.getQuantity(), Request.REJECTED);
+        HashMap<String, String> value = FirebaseUtils.getValueMapOfRequest(day, transaction.getQuantity(), Request.REJECTED);
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Buss_Cust_DayWise").child(bussCustId);
         reference.child(FirebaseUtils.getDatePath(day))
                 .setValue(value);
-        FirebaseUtils.incrementAccToReq(day,reference,Request.REJECTED);
-        FirebaseUtils.decrementAccToReq(day,reference,Request.PENDING);
+        FirebaseUtils.incrementAccToReq(day, reference, Request.REJECTED);
+        FirebaseUtils.decrementAccToReq(day, reference, Request.PENDING);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void SendToAccept(CalendarDay day, Transaction transaction) {
-        HashMap<String,String> value = FirebaseUtils.getValueMapOfRequest(day,transaction.getQuantity(), Request.ACCEPTED);
+        HashMap<String, String> value = FirebaseUtils.getValueMapOfRequest(day, transaction.getQuantity(), Request.ACCEPTED);
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Buss_Cust_DayWise").child(bussCustId);
         reference.child(FirebaseUtils.getDatePath(day))
                 .setValue(value);
-        FirebaseUtils.incrementAccToReq(day,reference,Request.ACCEPTED);
-        FirebaseUtils.decrementAccToReq(day,reference,Request.PENDING);
+        FirebaseUtils.incrementAccToReq(day, reference, Request.ACCEPTED);
+        FirebaseUtils.decrementAccToReq(day, reference, Request.PENDING);
     }
 
 

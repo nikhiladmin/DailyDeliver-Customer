@@ -25,10 +25,15 @@ import java.util.List;
 public class DatesViewModel extends ViewModel {
     private DatesRepo datesRepo;
     public MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
-    public MutableLiveData<String> totalAcceptedLiveData = new MutableLiveData<>();
-    public MutableLiveData<String> totalRejectedLiveData = new MutableLiveData<>();
-    public MutableLiveData<String> totalPendingLiveData = new MutableLiveData<>();
+    public MutableLiveData<String> totalAcceptedMonthlyLiveData = new MutableLiveData<>();
+    public MutableLiveData<String> totalRejectedMonthlyLiveData = new MutableLiveData<>();
+    public MutableLiveData<String> totalPendingMonthlyLiveData = new MutableLiveData<>();
+    public MutableLiveData<String> totalAcceptedYearlyLiveData = new MutableLiveData<>();
+    public MutableLiveData<String> totalRejectedYearlyLiveData = new MutableLiveData<>();
+    public MutableLiveData<String> totalPendingYearlyLiveData = new MutableLiveData<>();
     private MutableLiveData<List<Transaction>> totalLiveData = new MutableLiveData<>();
+    public MutableLiveData<String> currentYear = new MutableLiveData<>();
+
     String busscustId;
 
     public DatesViewModel(String busscustId) {
@@ -42,7 +47,7 @@ public class DatesViewModel extends ViewModel {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
                 .child("Buss_Cust_DayWise").child(busscustId)
                 .child(FirebaseUtils.getAllMonthPath("" + day.getYear(),day.getMonth() + ""));
-        getCurrentMonth(day);
+        getCurrentMonthTotal(day);
         datesRepo.requestTotalList(this,reference);
         return totalLiveData;
     }
@@ -65,11 +70,11 @@ public class DatesViewModel extends ViewModel {
                 .findFirst()
                 .orElse(null) : null;
     }
-    private void getCurrentMonth(CalendarDay day)
+    private void getCurrentMonthTotal(CalendarDay day)
     {
-        totalPendingLiveData.setValue("0");
-        totalRejectedLiveData.setValue("0");
-        totalAcceptedLiveData.setValue("0");
+        totalPendingMonthlyLiveData.setValue("0");
+        totalRejectedMonthlyLiveData.setValue("0");
+        totalAcceptedMonthlyLiveData.setValue("0");
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
                 .child("Buss_Cust_DayWise").child(busscustId)
                 .child(FirebaseUtils.getAllMonthPath(day.getYear()+"",""+day.getMonth())).child("Monthly-Total");
@@ -82,13 +87,49 @@ public class DatesViewModel extends ViewModel {
                     DataSnapshot snapshot = ((DataSnapshot) iterator.next());
                     if(snapshot.getKey().equals(Request.REJECTED))
                     {
-                        totalRejectedLiveData.setValue(snapshot.getValue()+"");
+                        totalRejectedMonthlyLiveData.setValue(snapshot.getValue()+"");
                     }else if(snapshot.getKey().equals(Request.PENDING))
                     {
-                        totalPendingLiveData.setValue(snapshot.getValue()+"");
+                        totalPendingMonthlyLiveData.setValue(snapshot.getValue()+"");
                     }else
                     {
-                        totalAcceptedLiveData.setValue(snapshot.getValue()+"");
+                        totalAcceptedMonthlyLiveData.setValue(snapshot.getValue()+"");
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void getCurrentYearTotal(CalendarDay day)
+    {
+        totalPendingYearlyLiveData.setValue("0");
+        totalRejectedYearlyLiveData.setValue("0");
+        totalAcceptedYearlyLiveData.setValue("0");
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
+                .child("Buss_Cust_DayWise").child(busscustId)
+                .child(day.getYear()+"").child("Yearly-Total");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Iterator iterator = dataSnapshot.getChildren().iterator();
+
+                while (iterator.hasNext()) {
+                    DataSnapshot snapshot = ((DataSnapshot) iterator.next());
+                    if(snapshot.getKey().equals(Request.REJECTED))
+                    {
+                        totalRejectedYearlyLiveData.setValue(""+snapshot.getValue());
+                    }else if(snapshot.getKey().equals(Request.PENDING))
+                    {
+                        totalPendingYearlyLiveData.setValue(""+snapshot.getValue());
+                    }else
+                    {
+                        totalAcceptedYearlyLiveData.setValue(""+snapshot.getValue());
                     }
                 }
             }
