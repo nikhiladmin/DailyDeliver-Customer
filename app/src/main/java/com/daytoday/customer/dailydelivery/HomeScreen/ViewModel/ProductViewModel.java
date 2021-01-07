@@ -10,14 +10,15 @@ import java.util.List;
 
 public class ProductViewModel extends ViewModel {
     private ProductRepo productRepo;
-    private MutableLiveData<List<Product>> liveData = new MutableLiveData<>();
+    private MutableLiveData<List<Product>> liveData;
 
     public ProductViewModel() {
         this.productRepo = new ProductRepo();
     }
 
     public LiveData<List<Product>> getProduct() {
-        liveData = productRepo.requestProduct();
+        if(liveData==null)
+            liveData = productRepo.requestProduct();
         return liveData;
     }
 }
