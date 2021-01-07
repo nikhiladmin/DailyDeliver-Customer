@@ -28,6 +28,10 @@
         <activity android:name=".LoginActivity.OtpVerification" />
         <activity android:name=".LoginActivity.PhoneVerification" />
         <activity android:name=".BlankActivity" />
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".WalkThrough.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
