@@ -20,10 +20,13 @@ public class DatesViewModel extends ViewModel {
     private MutableLiveData<List<Transaction>> totalLiveData = new MutableLiveData<>();
     String busscustId;
 
-    public DatesViewModel(String busscustId) {
-        this.busscustId = busscustId;
+    public DatesViewModel() {
         datesRepo = new DatesRepo();
         isLoading.setValue(false);
+    }
+
+    public void setBusscustId(String busscustId) {
+        this.busscustId = busscustId;
     }
 
     public MutableLiveData<List<Transaction>> getTotalList(CalendarDay day) {

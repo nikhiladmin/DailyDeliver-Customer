@@ -15,6 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Client {
     private static Retrofit retrofit = null;
+    private static Retrofit firebaseRetrofit = null;
 
     private static Gson gson = new GsonBuilder()
             .setLenient()
@@ -23,7 +24,7 @@ public class Client {
     public static Retrofit getClient() {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
-                    .baseUrl(ApiInterface.BASE_URL)
+                    .baseUrl(ApiInterface.API_BASE_URL)
                     .client(getHeader())
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -31,6 +32,18 @@ public class Client {
         }
         return retrofit;
     }
+
+    public static Retrofit getFirebaseClient() {
+        if (firebaseRetrofit == null) {
+            firebaseRetrofit = new Retrofit.Builder()
+                    .baseUrl(ApiInterface.FCM_BASE_URL)
+                    .client(getHeader())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .build();
+        }
+        return firebaseRetrofit;
+    }
+
     private static OkHttpClient getHeader() {
         return new OkHttpClient
                 .Builder()
