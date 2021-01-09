@@ -25,7 +25,6 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
-    public static final String BUSS_OBJECT = "Buss-Object";
     List<Product> buss_list;
     Context context;
     FirebaseUser currUser;
@@ -65,7 +64,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         holder.cardView.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(),CalenderActivity.class);
             Log.i("msg" ,buss_list.get(position).toString());
-            intent.putExtra(BUSS_OBJECT,buss_list.get(position));
+            intent.putExtra(CalenderActivity.CURRENT_PRODUCT,buss_list.get(position));
+            intent.putExtra(CalenderActivity.CUSTOMER_ID,currUser.getUid());
             context.startActivity(intent);
         });
     }
