@@ -64,9 +64,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         holder.cardView.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(),CalenderActivity.class);
             Log.i("msg" ,buss_list.get(position).toString());
-            intent.putExtra("buisness-customer-Id","" + buss_list.get(position).getUniqueId());
-            intent.putExtra("buisness-Id",buss_list.get(position).getBussId());
-            intent.putExtra("Customer-Id",currUser.getUid());
+            intent.putExtra(CalenderActivity.CURRENT_PRODUCT,buss_list.get(position));
+            intent.putExtra(CalenderActivity.CUSTOMER_ID,currUser.getUid());
             context.startActivity(intent);
         });
     }
