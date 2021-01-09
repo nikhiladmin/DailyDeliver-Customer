@@ -3,7 +3,9 @@ package com.daytoday.customer.dailydelivery.HomeScreen.Model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Product {
+import java.io.Serializable;
+
+public class Product implements Serializable {
 
     @SerializedName("uniqueId")
     @Expose
@@ -50,7 +52,9 @@ public class Product {
     @SerializedName("TotPen")
     @Expose
     private Integer totPen;
-
+    @SerializedName("token")
+    @Expose
+    private String token;
     @SerializedName("custConnected")
     @Expose
     private Boolean isConnected;
@@ -191,6 +195,14 @@ public class Product {
         this.totPen = totPen;
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     @Override
     public String toString() {
         return "Product{" +
@@ -209,6 +221,8 @@ public class Product {
                 ", totCan=" + totCan +
                 ", totEarn=" + totEarn +
                 ", totPen=" + totPen +
+                ", token='" + token + '\'' +
+                ", isConnected=" + isConnected +
                 '}';
     }
 }
