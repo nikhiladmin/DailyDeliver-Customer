@@ -15,6 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Client {
     private static Retrofit retrofit = null;
+    private static Retrofit geoCodingRetrofit = null;
 
     private static Gson gson = new GsonBuilder()
             .setLenient()
@@ -37,7 +38,17 @@ public class Client {
                 .addInterceptor(getInterceptor())
                 .build();
     }
-
+    public static Retrofit getGeocodingClient(){
+        if(geoCodingRetrofit==null){
+            geoCodingRetrofit = new Retrofit.Builder()
+                    .baseUrl("https://nominatim.openstreetmap.org/")
+                    .client(getHeader())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .build();
+        }
+        return geoCodingRetrofit;
+    }
     private static Interceptor getInterceptor() {
         return new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
             @Override
