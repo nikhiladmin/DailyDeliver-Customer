@@ -2,7 +2,6 @@ package com.daytoday.customer.dailydelivery;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +26,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 public class CalendarBottomSheet extends BottomSheetDialogFragment {
 
@@ -111,8 +109,8 @@ public class CalendarBottomSheet extends BottomSheetDialogFragment {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Buss_Cust_DayWise").child(product.getUniqueId().toString());
         reference.child(FirebaseUtils.getDatePath(day))
                 .setValue(value);
-        FirebaseUtils.incrementAccToReq(day,reference,Request.REJECTED);
-        FirebaseUtils.decrementAccToReq(day,reference,Request.PENDING);
+        FirebaseUtils.incrementAccToReq(day,reference,transaction.getQuantity(),Request.REJECTED);
+        FirebaseUtils.decrementAccToReq(day,reference,transaction.getQuantity(),Request.PENDING);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -121,7 +119,7 @@ public class CalendarBottomSheet extends BottomSheetDialogFragment {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Buss_Cust_DayWise").child(product.getUniqueId().toString());
         reference.child(FirebaseUtils.getDatePath(day))
                 .setValue(value);
-        FirebaseUtils.incrementAccToReq(day,reference,Request.ACCEPTED);
-        FirebaseUtils.decrementAccToReq(day,reference,Request.PENDING);
+        FirebaseUtils.incrementAccToReq(day,reference, transaction.getQuantity(), Request.ACCEPTED);
+        FirebaseUtils.decrementAccToReq(day,reference, transaction.getQuantity(), Request.PENDING);
     }
 }
