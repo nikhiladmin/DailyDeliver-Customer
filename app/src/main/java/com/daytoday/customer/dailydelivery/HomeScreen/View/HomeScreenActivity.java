@@ -13,10 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
 import com.daytoday.customer.dailydelivery.Network.ApiInterface;
@@ -28,6 +24,7 @@ import com.daytoday.customer.dailydelivery.Utilities.AppConstants;
 import com.daytoday.customer.dailydelivery.Utilities.SaveOfflineManager;
 import com.daytoday.customer.dailydelivery.ViewPagerAdapter;
 import com.daytoday.customer.dailydelivery.searchui.SearchFragment;
+import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -47,6 +44,7 @@ public class HomeScreenActivity extends AppCompatActivity implements BottomNavig
     SearchFragment searchFragment;
     NotificationFragment notificationFragment;
     UserFragment userFragment;
+    BadgeDrawable badgeDrawable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +80,17 @@ public class HomeScreenActivity extends AppCompatActivity implements BottomNavig
             }
         });
         setupViewPager(viewPager2);
+        addingBadgeToBottomNavigationView(bottomNavigationView);
+    }
+
+    private void addingBadgeToBottomNavigationView(BottomNavigationView bottomNavigationView) {
+        badgeDrawable = bottomNavigationView.getOrCreateBadge(R.id.notification);
+        //TODO whenever want to set number and show call the commented part
+        //badgeDrawable.setNumber(3);
+        //badgeDrawable.setVisible(true);
+        badgeDrawable.setVisible(false);
+        badgeDrawable.setHorizontalOffset(15);
+        badgeDrawable.setVerticalOffset(4);
     }
 
     public void setupViewPager(ViewPager viewPager2)
