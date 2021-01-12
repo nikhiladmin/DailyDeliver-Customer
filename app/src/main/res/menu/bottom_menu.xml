@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-
     <item
         android:id="@+id/myproducts"
         android:icon="@drawable/ic_product_black_24dp"
-        android:title="Products" />
+        android:title="@string/products" />
     <item
         android:id="@+id/search"
         android:icon="@drawable/ic_search_black_24dp"
-        android:title="Search" />
+        android:title="@string/search" />
     <item
         android:id="@+id/notification"
         android:icon="@drawable/ic_add_alert_black_24dp"
-        android:title="Notifications" />
+        android:title="@string/notifications" />
     <item
         android:id="@+id/myprofile"
         android:icon="@drawable/ic_profile_black_24dp"
-        android:title="My Account" />
+        android:title="@string/my_account" />
 </menu>
