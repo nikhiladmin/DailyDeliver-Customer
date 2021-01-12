@@ -116,7 +116,7 @@ public class UserFragment extends Fragment {
         userid.setText("ID-"+ SaveOfflineManager.getUserId(getContext()));
         usernameEditText.setText(SaveOfflineManager.getUserName(getContext()));
         userphoneEditText.setText(SaveOfflineManager.getUserPhoneNumber(getContext()));
-        userAddress.setText(SaveOfflineManager.getUserAdress(getContext()));
+        userAddress.setText(SaveOfflineManager.getUserAddress(getContext()));
 
 
         setProfileImage();
@@ -152,6 +152,7 @@ public class UserFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         FirebaseAuth.getInstance().signOut();
+                        SaveOfflineManager.clearSharedPreference(getContext());
                         getActivity().finishAffinity();
                         startActivity(new Intent(getActivity(), LoginPage.class));
                     }
@@ -210,7 +211,7 @@ public class UserFragment extends Fragment {
     }
     private void saveOffline(String name, String adress,String phone) {
         SaveOfflineManager.setUserName(getContext(),name);
-        SaveOfflineManager.setUserAdress(getContext(),adress);
+        SaveOfflineManager.setUserAddress(getContext(),adress);
         SaveOfflineManager.setUserPhoneNumber(getContext(),phone);
     }
 
