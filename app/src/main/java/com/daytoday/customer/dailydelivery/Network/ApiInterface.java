@@ -52,7 +52,7 @@ public interface ApiInterface {
 
     @GET("update-cust-user-details")
     Call<YesNoResponse> updateCutUserDetails(@Query("name") String name
-            ,@Query("phone") String phone,@Query("address") String address,@Query("custid") String custid);
+            ,@Query("phone") String phone,@Query("address") String address,@Query("custid") String custid,@Query("profilepic")String profilepic);
 
    /* @GET("fetch-emp")
     Call<> getEmp(@Query("") String );*/
