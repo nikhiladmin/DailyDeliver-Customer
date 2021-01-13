@@ -9,20 +9,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.daytoday.customer.dailydelivery.HomeScreen.Model.Product;
 import com.daytoday.customer.dailydelivery.HomeScreen.ViewModel.ProductViewModel;
 import com.daytoday.customer.dailydelivery.R;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
-public class ProductFragment extends Fragment {
+public class ProductFragment extends BottomSheetDialogFragment {
     RecyclerView product_list;
     ProgressBar progressBar;
     View view;
@@ -30,6 +33,11 @@ public class ProductFragment extends Fragment {
     View noBussView;
 
     public ProductFragment() {
+    }
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.BottomSheetDialogTheme);
     }
 
     @Override
@@ -50,6 +58,8 @@ public class ProductFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(ProductViewModel.class);
         progressBar.setVisibility(View.VISIBLE);
         noBussView = view.findViewById(R.id.noBusslayout);
+        DividerItemDecoration itemDecor = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
+        product_list.addItemDecoration(itemDecor);
         viewModel.getProduct().observe(getViewLifecycleOwner(), new Observer<List<Product>>() {
             @Override
             public void onChanged(List<Product> products) {

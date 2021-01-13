@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
@@ -22,13 +24,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.daytoday.customer.dailydelivery.R;
 import com.daytoday.customer.dailydelivery.searchui.SearchAdapter;
 import com.daytoday.customer.dailydelivery.searchui.SearchViewModel;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class SearchFragment extends Fragment {
     RecyclerView recyclerView;
-    Button searchbtn;
-    TextInputEditText searchField;
+    ImageButton searchbtn;
+    EditText searchField;
     SearchViewModel searchViewModel;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
