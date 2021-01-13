@@ -10,19 +10,16 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import com.daytoday.customer.dailydelivery.LoginActivity.LoginPage;
 import com.daytoday.customer.dailydelivery.Network.ApiInterface;
@@ -32,7 +29,6 @@ import com.daytoday.customer.dailydelivery.R;
 import com.daytoday.customer.dailydelivery.Utilities.SaveOfflineManager;
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
@@ -41,18 +37,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnPausedListener;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.karumi.dexter.Dexter;
@@ -63,12 +50,13 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.squareup.picasso.Picasso;
+import com.yalantis.ucrop.UCrop;
 
 import java.io.ByteArrayOutputStream;
-import java.util.HashMap;
+import java.io.File;
 import java.util.List;
-import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -78,10 +66,10 @@ import static android.app.Activity.RESULT_OK;
 public class UserFragment extends Fragment {
 
     FirebaseAuth firebaseAuth;
-    MaterialTextView usertextview,userid;
-    EditText usernameEditText,userphoneEditText,userAddress;
-    MaterialButton button,signoutbutton;
-    ImageView profileImg;
+    MaterialTextView usertextview, userid;
+    EditText usernameEditText, userphoneEditText, userAddress;
+    MaterialButton button, signoutbutton;
+    CircleImageView profileImg;
     String username;
     FloatingActionButton uploadProfile;
     private int GALLERY = 1, CAMERA = 2;
@@ -90,30 +78,29 @@ public class UserFragment extends Fragment {
     private StorageReference storageRef;
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        storage=FirebaseStorage.getInstance();
+        storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
 
         View view = inflater.inflate(R.layout.fragment_user, container, false);
-        firebaseAuth=FirebaseAuth.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
         profileImg = view.findViewById(R.id.profileImg);
-        uploadProfile= view.findViewById(R.id.myacc_fab);
-        usertextview=view.findViewById(R.id.UsersName);
-        userid=view.findViewById(R.id.currId);
-        usernameEditText=view.findViewById(R.id.myacc_name);
-        userphoneEditText=view.findViewById(R.id.myacc_phone);
+        uploadProfile = view.findViewById(R.id.myacc_fab);
+        usertextview = view.findViewById(R.id.UsersName);
+        userid = view.findViewById(R.id.currId);
+        usernameEditText = view.findViewById(R.id.myacc_name);
+        userphoneEditText = view.findViewById(R.id.myacc_phone);
         userphoneEditText.setEnabled(false);
-        userAddress=view.findViewById(R.id.myacc_address);
-        button=view.findViewById(R.id.submitbutton);
-        signoutbutton=view.findViewById(R.id.signout);
-        username=firebaseAuth.getCurrentUser().getDisplayName().toUpperCase();
+        userAddress = view.findViewById(R.id.myacc_address);
+        button = view.findViewById(R.id.submitbutton);
+        signoutbutton = view.findViewById(R.id.signout);
+        username = firebaseAuth.getCurrentUser().getDisplayName().toUpperCase();
         usertextview.setText(SaveOfflineManager.getUserName(getContext()));
-        userid.setText("ID-"+ SaveOfflineManager.getUserId(getContext()));
+        userid.setText("ID-" + SaveOfflineManager.getUserId(getContext()));
         usernameEditText.setText(SaveOfflineManager.getUserName(getContext()));
         userphoneEditText.setText(SaveOfflineManager.getUserPhoneNumber(getContext()));
         userAddress.setText(SaveOfflineManager.getUserAddress(getContext()));
@@ -131,13 +118,13 @@ public class UserFragment extends Fragment {
                 alertDialog.setPositiveButton("I Understand", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        updateData();
+                        FirebaseUpload();
                     }
                 });
                 alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Snackbar.make(getActivity().findViewById(android.R.id.content),"Profile Update Cancelled",Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(getActivity().findViewById(android.R.id.content), "Profile Update Cancelled", Snackbar.LENGTH_SHORT).show();
                     }
                 }).show();
             }
@@ -179,33 +166,31 @@ public class UserFragment extends Fragment {
     }
 
 
-    public void getAddress()
-    {
-        String address="";
+    public void getAddress() {
+        String address = "";
         userAddress.setText(address);
     }
 
 
-    public void updateData()
-    {
-        String name=usernameEditText.getText().toString();
-        String address=userAddress.getText().toString();
-        String phone=userphoneEditText.getText().toString();
-        String custid=SaveOfflineManager.getUserId(getContext());
-        Log.e("tag",""+name+" "+address+" "+phone+" "+custid);
-        ApiInterface apiInterface= Client.getClient().create(ApiInterface.class);
-        Call<YesNoResponse> updateUserInfo = apiInterface.updateCutUserDetails(name,phone,address,custid);
+    public void updateData(String imageURL) {
+        String name = usernameEditText.getText().toString();
+        String address = userAddress.getText().toString();
+        String phone = userphoneEditText.getText().toString();
+        String custid = SaveOfflineManager.getUserId(getContext());
+        Log.e("tag", "" + name + " " + address + " " + phone + " " + custid);
+        ApiInterface apiInterface = Client.getClient().create(ApiInterface.class);
+        Call<YesNoResponse> updateUserInfo = apiInterface.updateCutUserDetails(name, phone, address, custid,imageURL);
         updateUserInfo.enqueue(new Callback<YesNoResponse>() {
             @Override
             public void onResponse(Call<YesNoResponse> call, Response<YesNoResponse> response) {
-                Snackbar.make(getActivity().findViewById(android.R.id.content),"Changes will take sometime to reflect.",Snackbar.LENGTH_LONG).show();
-                saveOffline(name,address,phone);
+                Snackbar.make(getActivity().findViewById(android.R.id.content), "Changes will take sometime to reflect.", Snackbar.LENGTH_LONG).show();
+                saveOffline(name, address, phone);
             }
 
             @Override
             public void onFailure(Call<YesNoResponse> call, Throwable t) {
-                Log.e("tag",""+t);
-                Snackbar.make(getActivity().findViewById(android.R.id.content),"Data Update Failed.Try Again",Snackbar.LENGTH_LONG).show();
+                Log.e("tag", "" + t);
+                Snackbar.make(getActivity().findViewById(android.R.id.content), "Data Update Failed.Try Again", Snackbar.LENGTH_LONG).show();
             }
         });
     }
@@ -215,7 +200,7 @@ public class UserFragment extends Fragment {
         SaveOfflineManager.setUserPhoneNumber(getContext(),phone);
     }
 
-    private void  requestMultiplePermissions() {
+    private void requestMultiplePermissions() {
         Dexter.withContext(getContext())
                 .withPermissions(
                         Manifest.permission.CAMERA,
@@ -260,7 +245,7 @@ public class UserFragment extends Fragment {
         permissionDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-               requestMultiplePermissions();
+                requestMultiplePermissions();
             }
         });
         permissionDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -271,12 +256,12 @@ public class UserFragment extends Fragment {
         }).show();
     }
 
-    private void showPictureDialog(){
+    private void showPictureDialog() {
         AlertDialog.Builder pictureDialog = new AlertDialog.Builder(getActivity());
         pictureDialog.setTitle("Select Action");
         String[] pictureDialogItems = {
                 "Select photo from gallery",
-                "Capture photo from camera" };
+                "Capture photo from camera"};
         pictureDialog.setItems(pictureDialogItems,
                 new DialogInterface.OnClickListener() {
                     @Override
@@ -308,92 +293,56 @@ public class UserFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.i(TAG, "onActivityResult: "+data.getDataString());
-        try {
-            Log.i(TAG, "onActivityResult: "+requestCode+" "+requestCode);
-            super.onActivityResult(requestCode, resultCode, data);
-            if (resultCode == Activity.RESULT_CANCELED) {
-                return;
-            }
-            if (requestCode == GALLERY&& data!=null&&data.getData()!=null&& resultCode==RESULT_OK) {
-
-                if (data != null) {
-                    Log.i(TAG, "onActivityResult: "+data.getDataString());
-                    Uri contentURI = data.getData();
-                    FirebaseUpload(contentURI);
-                }
-
-            } else if (requestCode == CAMERA) {
-                Log.i(TAG, "onActivityResult: RESULT CODE"+resultCode);
-            Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-            Log.i(TAG, "onActivityResult: "+thumbnail);
-            profileImg.setImageBitmap(thumbnail);
-            FirebaseUpload(getImageUri(getContext(),thumbnail));
-
-            }
-        }catch (Exception e){
-            Log.e(TAG, "onActivityResult: "+e.getMessage());
-            Log.e(TAG, "onActivityResult: "+e.getStackTrace());
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_CANCELED) {
+            return;
         }
+        if (requestCode == GALLERY && resultCode == RESULT_OK) {
+            imageUri = data.getData();
+            startCrop(imageUri);
 
+        } else if (requestCode == CAMERA) {
+            Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+            imageUri = getImageUri(getContext(), thumbnail);
+            startCrop(imageUri);
+        } else if (requestCode == UCrop.REQUEST_CROP && resultCode == RESULT_OK) {
+            Uri uri = UCrop.getOutput(data);
+            profileImg.setImageURI(uri);
+        }
     }
 
-    private void FirebaseUpload(Uri ImageUri){
+    private void FirebaseUpload() {
 
-        if(ImageUri!=null){
-            ProgressDialog progressDialog =new ProgressDialog(getActivity());
+        if (picture != null) {
+            ProgressDialog progressDialog = new ProgressDialog(getActivity());
             progressDialog.setCancelable(true);
             progressDialog.setTitle("Please Wait...");
             progressDialog.show();
-            try {
-                Log.i(TAG, "onSuccess: ");
-                StorageReference reference = storageRef.child("CustomerUser/" + firebaseAuth.getCurrentUser().getUid());
-                reference.putFile(ImageUri).addOnSuccessListener(taskSnapshot -> {
-                    progressDialog.dismiss();
-                    Log.i(TAG, "onSuccess: "+storageRef.getBucket());
-                    reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                    .setPhotoUri(uri)
-                                    .build();
-                            firebaseAuth.getCurrentUser().updateProfile(profileUpdates)
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                Log.d(TAG, "User profile updated.");
-                                                setProfileImage();
-                                            }
-                                        }
-                                    });
-                        }
-                    });
-                }).addOnFailureListener(e -> {
-                    Snackbar.make(getView(), "Uploading Failed", Snackbar.LENGTH_LONG).show();
-                    progressDialog.dismiss();
-                    Log.i(TAG, "onFailure: "+e.getMessage());
-                }).addOnCanceledListener(new OnCanceledListener() {
-                    @Override
-                    public void onCanceled() {
-                        progressDialog.dismiss();
-                        Log.i(TAG, "onCanceled: ");
-                    }
-                }).addOnProgressListener(taskSnapshot -> {
-                    Log.i(TAG, "onProgress: ");
-                    double Progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                    progressDialog.setMessage("Uploading " + (int) Progress + "%");
-                }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onPaused(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-
-                    }
+            StorageReference reference = storageRef.child("CustomerUser/" + firebaseAuth.getCurrentUser().getUid());
+            reference.putFile(picture).addOnSuccessListener(taskSnapshot -> {
+                progressDialog.dismiss();
+                reference.getDownloadUrl().addOnSuccessListener(uri -> {
+                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                            .setPhotoUri(uri)
+                            .build();
+                    firebaseAuth.getCurrentUser().updateProfile(profileUpdates)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        setProfileImage();
+                                    }
+                                }
+                            });
+                    updateData(uri.toString());
                 });
-            }catch (Exception e){
-
-                Toast.makeText(getContext(), "Exception throws "+e.getMessage(), Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
-            }
+            }).addOnFailureListener(e -> {
+                progressDialog.dismiss();
+                updateData(null);
+            });
+        }else
+        {
+            updateData(null);
         }
     }
 
@@ -404,17 +353,39 @@ public class UserFragment extends Fragment {
         return Uri.parse(path);
     }
 
-    private void  setProfileImage(){
-        Uri imageUri=firebaseAuth.getCurrentUser().getPhotoUrl();
-        if(imageUri!=null){
+    private void setProfileImage() {
+        Uri imageUri = firebaseAuth.getCurrentUser().getPhotoUrl();
+        if (imageUri != null) {
             Picasso.get()
                     .load(imageUri.toString())
                     .resize(500, 500)
                     .centerCrop()
                     .into(profileImg);
-        }else{
-            profileImg.setImageResource(R.drawable.ic_baseline_account_circle_24);
+        } else {
+            profileImg.setImageResource(R.drawable.profile001);
         }
+    }
+
+    Uri picture, imageUri;
+
+    private void startCrop(@NonNull Uri uri) {
+        String des = "pic" + System.currentTimeMillis() + ".jpg";
+        UCrop uCrop = UCrop.of(uri, Uri.fromFile(new File(getActivity().getCacheDir(), des)));
+        uCrop.withAspectRatio(1, 1);
+        uCrop.withMaxResultSize(450, 450);
+        uCrop.withOptions(getCropOptions());
+        uCrop.start(getActivity(), this);
+        picture = Uri.fromFile(new File(getActivity().getCacheDir(), des));
+    }
+
+    private UCrop.Options getCropOptions() {
+        UCrop.Options options = new UCrop.Options();
+        options.setHideBottomControls(false);
+        options.setFreeStyleCropEnabled(true);
+        options.setCompressionQuality(50);
+        options.setToolbarTitle("Crop Your Image");
+        options.setStatusBarColor(getResources().getColor(R.color.colorPrimary));
+        return options;
     }
 
 }
