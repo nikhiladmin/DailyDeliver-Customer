@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
+import com.daytoday.customer.dailydelivery.LoginActivity.AdditionalInfo;
 import com.daytoday.customer.dailydelivery.Network.ApiInterface;
 import com.daytoday.customer.dailydelivery.Network.Client;
 import com.daytoday.customer.dailydelivery.Network.Response.BussDetailsResponse;
@@ -30,6 +31,7 @@ import com.daytoday.customer.dailydelivery.ViewPagerAdapter;
 import com.daytoday.customer.dailydelivery.searchui.SearchFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -47,6 +49,8 @@ public class HomeScreenActivity extends AppCompatActivity implements BottomNavig
     SearchFragment searchFragment;
     NotificationFragment notificationFragment;
     UserFragment userFragment;
+    FirebaseAuth mAuth;
+    FirebaseUser currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -226,6 +230,29 @@ public class HomeScreenActivity extends AppCompatActivity implements BottomNavig
                 Log.i(AppConstants.ERROR_LOG,"Some Error Occurred in HomeScreenActivity Error is : { " + t.getMessage() + " }");
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            Log.i("AUTHENT_US", "onStart: Home"+SaveOfflineManager.getUserAddress(HomeScreenActivity.this));
+
+            if(SaveOfflineManager.getUserAddress(HomeScreenActivity.this)==null||SaveOfflineManager.getUserAddress(HomeScreenActivity.this).length()==0){
+                Intent loginIntent = new Intent(HomeScreenActivity.this, AdditionalInfo.class);
+                if(currentUser.getPhoneNumber()!=null&&currentUser.getPhoneNumber().length()!=0){
+                    loginIntent.putExtra("isPhoneAuth",true);
+                }else if(currentUser.getEmail()!=null&&currentUser.getEmail().length()!=0){
+                    loginIntent.putExtra("isPhoneAuth",false);
+                }
+                loginIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                loginIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(loginIntent);
+                finish();
+            }
+        }
     }
 }
 

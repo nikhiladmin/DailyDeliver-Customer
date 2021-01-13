@@ -32,6 +32,12 @@ public class SaveOfflineManager {
         }
         return preferences.getString(AppConstants.USER_ID, "");
     }
+    public static void clearSharedPreference(Context context) {
+        if (preferences == null) {
+            initialise(context);
+        }
+         preferences.edit().clear().apply();
+    }
 
     public static void setUserId(Context context,String userName) {
         if (preferences == null) {
@@ -42,14 +48,14 @@ public class SaveOfflineManager {
         editor.commit();
     }
 
-    public static String getUserAdress(Context context) {
+    public static String getUserAddress(Context context) {
         if (preferences == null) {
             initialise(context);
         }
         return preferences.getString(AppConstants.USER_ADRESS, "");
     }
 
-    public static void setUserAdress(Context context,String userName) {
+    public static void setUserAddress(Context context,String userName) {
         if (preferences == null) {
             initialise(context);
         }

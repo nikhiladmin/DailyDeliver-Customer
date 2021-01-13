@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeScreen.View.CalenderActivity"
-    app:layout_scrollFlags="scroll|enterAlways" >
+    app:layout_scrollFlags="scroll|enterAlways"
+    tools:context=".HomeScreen.View.CalenderActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -18,6 +18,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:mcv_selectionColor="@color/colorGray"
             app:mcv_selectionMode="single" />
 
         <androidx.cardview.widget.CardView
@@ -40,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
                     android:fontFamily="@font/roboto_medium"
-                    android:text="Month"
+                    android:text="Total this month"
                     android:textColor="@color/colorBlack"
                     android:textSize="20sp" />
 
@@ -58,14 +59,14 @@
                         android:background="@color/colorApproved"
                         android:gravity="center">
 
-                        <TextView
+                        <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/month_accepted"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:padding="10dp"
-                            android:text="23"
+                            android:text="0"
                             android:textColor="@color/colorWhite"
                             android:textSize="30sp" />
                     </LinearLayout>
@@ -78,14 +79,14 @@
                         android:background="@color/colorPending"
                         android:gravity="center">
 
-                        <TextView
+                        <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/month_pending"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:padding="10dp"
-                            android:text="23"
+                            android:text="0"
                             android:textColor="@color/colorWhite"
                             android:textSize="30sp" />
                     </LinearLayout>
@@ -98,14 +99,14 @@
                         android:background="@color/colorReject"
                         android:gravity="center">
 
-                        <TextView
+                        <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/month_cancelled"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:padding="10dp"
-                            android:text="23"
+                            android:text="0"
                             android:textColor="@color/colorWhite"
                             android:textSize="30sp" />
                     </LinearLayout>
@@ -133,7 +134,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
                     android:fontFamily="@font/roboto_medium"
-                    android:text="Total"
+                    android:text="Total this year"
                     android:textColor="@color/colorBlack"
                     android:textSize="20sp" />
 
@@ -151,14 +152,14 @@
                         android:background="@color/colorApproved"
                         android:gravity="center">
 
-                        <TextView
+                        <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/total_accepted"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:padding="10dp"
-                            android:text="23"
+                            android:text="0"
                             android:textColor="@color/colorWhite"
                             android:textSize="30sp" />
                     </LinearLayout>
@@ -171,14 +172,14 @@
                         android:background="@color/colorPending"
                         android:gravity="center">
 
-                        <TextView
+                        <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/total_pending"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:padding="10dp"
-                            android:text="23"
+                            android:text="0"
                             android:textColor="@color/colorWhite"
                             android:textSize="30sp" />
                     </LinearLayout>
@@ -191,14 +192,14 @@
                         android:background="@color/colorDelete"
                         android:gravity="center">
 
-                        <TextView
+                        <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/total_cancelled"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:padding="10dp"
-                            android:text="23"
+                            android:text="0"
                             android:textColor="@color/colorWhite"
                             android:textSize="30sp" />
                     </LinearLayout>
@@ -243,13 +244,13 @@
                         android:text="Current Month"
                         android:textSize="20sp" />
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/current_month_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="10dp"
-                        android:text="₹230"
+                        android:text="₹0"
                         android:textSize="20sp" />
                 </RelativeLayout>
 
@@ -272,13 +273,13 @@
                         android:text="Total"
                         android:textSize="20sp" />
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/total_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="10dp"
-                        android:text="₹1230"
+                        android:text="₹0"
                         android:textSize="20sp" />
                 </RelativeLayout>
             </LinearLayout>
@@ -289,6 +290,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
+            android:indeterminateTint="@color/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

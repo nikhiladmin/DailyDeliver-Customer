@@ -21,7 +21,7 @@ public interface ApiInterface {
 
     @GET("insert-cust-user-details")
     Call<YesNoResponse> addCustUserDetails(@Query("userid") String userId,@Query("username") String userName
-            ,@Query("userphone") String userPhone,@Query("useradd") String userAdd);
+            ,@Query("userphone") String userPhone,@Query("useradd") String userAdd,@Query("useremail") String email,@Query("provider") int provider);
 
     @GET("insert-buss-details")
     Call<YesNoResponse> addBussDetails(@Query("bussname") String bussName,@Query("monordaily") String monOrDaily
@@ -61,4 +61,20 @@ public interface ApiInterface {
     Call<DayWiseResponse> getDayWise(@Query("busscustid") String bussCustId);
     @GET("/v1/explore-business")
     Call<SearchResponseModel> getSearch(@QueryMap Map<String,String> map);
+
+    @GET("reverse")
+    Call<GeocodingResponse> getReverseGeocoding(@Query("lat") double lat,@Query("lon") double lon,@Query("zoom") int zoom,@Query("addressdetails") int addressdetails,@Query("format") String format);
+
+    @GET("send-login-otp")
+    Call<OTPSendResponse> getOTPSend(@Query("email") String email);
+
+    @GET("verify-otp")
+    Call<OTPVerifyResponse> getOTPVerify(@Query("otp") String otp,@Query("userid") String userid);
+
+    @GET("is-registered-cust")
+    Call<AuthUserCheckResponse> isRegisteredUser(@Query("email") String email);
+
+
+    @GET("login-cust")
+    Call<AuthUserResponse> loginUser(@Query("custid") String custid);
 }
