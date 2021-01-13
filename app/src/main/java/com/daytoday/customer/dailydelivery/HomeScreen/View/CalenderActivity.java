@@ -11,6 +11,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.daytoday.customer.dailydelivery.CalendarBottomSheet;
 import com.daytoday.customer.dailydelivery.HomeScreen.Model.Product;
 import com.daytoday.customer.dailydelivery.HomeScreen.Model.Transaction;
@@ -58,7 +63,8 @@ public class CalenderActivity extends AppCompatActivity {
         calendarView = findViewById(R.id.calendar);
         progressBar = findViewById(R.id.progress_bar);
         progressBar.setVisibility(View.VISIBLE);
-        datesViewModel = new DatesViewModel(bussCustId);
+        datesViewModel = new ViewModelProvider(this).get(DatesViewModel.class);
+        datesViewModel.setBusscustId(currentProduct.getUniqueId().toString());
         apiInterface = Client.getClient().create(ApiInterface.class);
         monthCardView = findViewById(R.id.month_card);
         totalCardView = findViewById(R.id.total_card);

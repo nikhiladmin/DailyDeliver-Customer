@@ -14,8 +14,12 @@ import androidx.databinding.DataBindingUtil;
 import com.daytoday.customer.dailydelivery.HomeScreen.Model.Product;
 import com.daytoday.customer.dailydelivery.HomeScreen.Model.Transaction;
 import com.daytoday.customer.dailydelivery.HomeScreen.View.CalenderActivity;
+import com.daytoday.customer.dailydelivery.Network.Response.RequestNotification;
+import com.daytoday.customer.dailydelivery.Network.Response.SendDataModel;
 import com.daytoday.customer.dailydelivery.Utilities.FirebaseUtils;
+import com.daytoday.customer.dailydelivery.Utilities.NotificationService;
 import com.daytoday.customer.dailydelivery.Utilities.Request;
+import com.daytoday.customer.dailydelivery.Utilities.SaveOfflineManager;
 import com.daytoday.customer.dailydelivery.databinding.BottomsheetCalendarDetailsBinding;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.firebase.database.DatabaseReference;
@@ -111,6 +115,18 @@ public class CalendarBottomSheet extends BottomSheetDialogFragment {
                 .setValue(value);
         FirebaseUtils.incrementAccToReq(day,reference,transaction.getQuantity(),Request.REJECTED);
         FirebaseUtils.decrementAccToReq(day,reference,transaction.getQuantity(),Request.PENDING);
+        //TODO Need To Complete This
+        if (product.getToken()!=null) {
+            RequestNotification requestNotification = new RequestNotification()
+                    .setToken(product.getToken())
+                    .setSendDataModel(new SendDataModel()
+                            .setFromWhichPerson(SaveOfflineManager.getUserName(getContext()))
+                            .setFromWhichPersonID(SaveOfflineManager.getUserId(getContext()))
+                            .setNotificationStatus(Request.REJECTED)
+                            .setProductName(product.getName())
+                            .setQuantity(transaction.getQuantity()));
+            NotificationService.sendNotification(requestNotification);
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -121,5 +137,17 @@ public class CalendarBottomSheet extends BottomSheetDialogFragment {
                 .setValue(value);
         FirebaseUtils.incrementAccToReq(day,reference, transaction.getQuantity(), Request.ACCEPTED);
         FirebaseUtils.decrementAccToReq(day,reference, transaction.getQuantity(), Request.PENDING);
+        //TODO Need To Complete This
+        if (product.getToken()!=null) {
+            RequestNotification requestNotification = new RequestNotification()
+                    .setToken(product.getToken())
+                    .setSendDataModel(new SendDataModel()
+                            .setFromWhichPerson(SaveOfflineManager.getUserName(getContext()))
+                            .setFromWhichPersonID(SaveOfflineManager.getUserId(getContext()))
+                            .setNotificationStatus(Request.ACCEPTED)
+                            .setProductName(product.getName())
+                            .setQuantity(transaction.getQuantity()));
+            NotificationService.sendNotification(requestNotification);
+        }
     }
 }
