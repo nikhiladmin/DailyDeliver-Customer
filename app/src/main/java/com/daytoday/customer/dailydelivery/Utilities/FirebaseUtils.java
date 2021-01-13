@@ -53,7 +53,7 @@ public class FirebaseUtils {
             public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
                 Integer value = mutableData.getValue(Integer.class);
                 if (value == null){
-                    mutableData.setValue(1);
+                    mutableData.setValue(changeValue);
                 }else {
                     mutableData.setValue(value+changeValue);
                 }
@@ -71,19 +71,19 @@ public class FirebaseUtils {
         });
     }
 
-    public static void incrementAccToReq(CalendarDay day, DatabaseReference reference, String request) {
+    public static void incrementAccToReq(CalendarDay day, DatabaseReference reference, String quantity, String request) {
         // request means pending, accepted Or rejected
         DatabaseReference yearlyReference = reference.child(getYearlyPathOnRequest(day, request));
-        changeValueOnReference(yearlyReference,INCREMENT);
+        changeValueOnReference(yearlyReference,(INCREMENT * Integer.parseInt(quantity)));
         DatabaseReference monthlyReference = reference.child(getMonthlyPathOnRequest(day, request));
-        changeValueOnReference(monthlyReference,INCREMENT);
+        changeValueOnReference(monthlyReference,(INCREMENT * Integer.parseInt(quantity)));
     }
 
-    public static void decrementAccToReq(CalendarDay day, DatabaseReference reference, String request) {
+    public static void decrementAccToReq(CalendarDay day, DatabaseReference reference, String quantity, String request) {
         // request means pending, accepted Or rejected
         DatabaseReference newReference = reference.child(getYearlyPathOnRequest(day, request));
-        changeValueOnReference(newReference,DECREMENT);
+        changeValueOnReference(newReference,(DECREMENT * Integer.parseInt(quantity)));
         DatabaseReference monthlyReference = reference.child(getMonthlyPathOnRequest(day, request));
-        changeValueOnReference(monthlyReference,DECREMENT);
+        changeValueOnReference(monthlyReference,(DECREMENT * Integer.parseInt(quantity)));
     }
 }
