@@ -113,8 +113,8 @@ public class CalendarBottomSheet extends BottomSheetDialogFragment {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Buss_Cust_DayWise").child(product.getUniqueId().toString());
         reference.child(FirebaseUtils.getDatePath(day))
                 .setValue(value);
-        FirebaseUtils.incrementAccToReq(day,reference,Request.REJECTED);
-        FirebaseUtils.decrementAccToReq(day,reference,Request.PENDING);
+        FirebaseUtils.incrementAccToReq(day,reference,transaction.getQuantity(),Request.REJECTED);
+        FirebaseUtils.decrementAccToReq(day,reference,transaction.getQuantity(),Request.PENDING);
         //TODO Need To Complete This
         if (product.getToken()!=null) {
             RequestNotification requestNotification = new RequestNotification()
@@ -135,8 +135,8 @@ public class CalendarBottomSheet extends BottomSheetDialogFragment {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Buss_Cust_DayWise").child(product.getUniqueId().toString());
         reference.child(FirebaseUtils.getDatePath(day))
                 .setValue(value);
-        FirebaseUtils.incrementAccToReq(day,reference,Request.ACCEPTED);
-        FirebaseUtils.decrementAccToReq(day,reference,Request.PENDING);
+        FirebaseUtils.incrementAccToReq(day,reference, transaction.getQuantity(), Request.ACCEPTED);
+        FirebaseUtils.decrementAccToReq(day,reference, transaction.getQuantity(), Request.PENDING);
         //TODO Need To Complete This
         if (product.getToken()!=null) {
             RequestNotification requestNotification = new RequestNotification()

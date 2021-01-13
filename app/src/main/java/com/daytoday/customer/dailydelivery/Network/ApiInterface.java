@@ -32,7 +32,7 @@ public interface ApiInterface {
 
     @GET("insert-cust-user-details")
     Call<YesNoResponse> addCustUserDetails(@Query("userid") String userId,@Query("username") String userName
-            ,@Query("userphone") String userPhone,@Query("useradd") String userAdd);
+            ,@Query("userphone") String userPhone,@Query("useradd") String userAdd,@Query("useremail") String email,@Query("provider") int provider);
 
     @GET("insert-buss-details")
     Call<YesNoResponse> addBussDetails(@Query("bussname") String bussName,@Query("monordaily") String monOrDaily
@@ -63,7 +63,7 @@ public interface ApiInterface {
 
     @GET("update-cust-user-details")
     Call<YesNoResponse> updateCutUserDetails(@Query("name") String name
-            ,@Query("phone") String phone,@Query("address") String address,@Query("custid") String custid);
+            ,@Query("phone") String phone,@Query("address") String address,@Query("custid") String custid,@Query("profilepic")String profilepic);
 
    /* @GET("fetch-emp")
     Call<> getEmp(@Query("") String );*/
@@ -76,4 +76,20 @@ public interface ApiInterface {
     @GET("update-cust-phone-token")
     Call<YesNoResponse> updateFirebaseToken(@Query("token") String token,
                                             @Query("custid") String custUserId);
+
+    @GET("reverse")
+    Call<GeocodingResponse> getReverseGeocoding(@Query("lat") double lat,@Query("lon") double lon,@Query("zoom") int zoom,@Query("addressdetails") int addressdetails,@Query("format") String format);
+
+    @GET("send-login-otp")
+    Call<OTPSendResponse> getOTPSend(@Query("email") String email);
+
+    @GET("verify-otp")
+    Call<OTPVerifyResponse> getOTPVerify(@Query("otp") String otp,@Query("userid") String userid);
+
+    @GET("is-registered-cust")
+    Call<AuthUserCheckResponse> isRegisteredUser(@Query("email") String email);
+
+
+    @GET("login-cust")
+    Call<AuthUserResponse> loginUser(@Query("custid") String custid);
 }
