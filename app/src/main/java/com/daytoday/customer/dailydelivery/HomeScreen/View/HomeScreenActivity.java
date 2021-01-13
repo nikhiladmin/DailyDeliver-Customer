@@ -62,6 +62,7 @@ public class HomeScreenActivity extends AppCompatActivity implements BottomNavig
         toolbar=findViewById(R.id.toolbar_home);
         viewPager2 = findViewById(R.id.ViewPager);
         apiInterface = Client.getClient().create(ApiInterface.class);
+        updateFirebaseToken();
         setSupportActionBar(toolbar);
         viewPager2.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -230,6 +231,28 @@ public class HomeScreenActivity extends AppCompatActivity implements BottomNavig
                 Log.i(AppConstants.ERROR_LOG,"Some Error Occurred in HomeScreenActivity Error is : { " + t.getMessage() + " }");
             }
         });
+    }
+
+
+    public void updateFirebaseToken() {
+        String token = SaveOfflineManager.getFireBaseToken(this);
+        Boolean FirebaseTokenChangedOrNot = SaveOfflineManager.getFireBaseTokenChangedOrNot(this);
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        if (token != null && FirebaseTokenChangedOrNot){
+            Call<YesNoResponse> updateFirebaseTokenCall = apiInterface.updateFirebaseToken(token,userId);
+            updateFirebaseTokenCall.enqueue(new Callback<YesNoResponse>() {
+                @Override
+                public void onResponse(Call<YesNoResponse> call, Response<YesNoResponse> response) {
+                    Log.i("Firebase","Response Successful " + response.body().getMessage());
+                    SaveOfflineManager.setFireBaseTokenChangedOrNot(HomeScreenActivity.this,false);
+                }
+
+                @Override
+                public void onFailure(Call<YesNoResponse> call, Throwable t) {
+                    Log.i("Firebase","Error Occurred :-> " + t.getMessage());
+                }
+            });
+        }
     }
 
     @Override
