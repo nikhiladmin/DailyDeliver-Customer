@@ -10,7 +10,7 @@
         android:id="@+id/textView"
         android:layout_width="272dp"
         android:layout_height="62dp"
-        android:fontFamily="@font/poppins_medium"
+        android:fontFamily="@font/productsans_bold"
         android:gravity="center_horizontal"
         android:text="Verification"
         android:textAlignment="center"
@@ -25,10 +25,10 @@
         app:layout_constraintVertical_bias="0.13999999" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/otp_subtitle"
         android:layout_width="268dp"
         android:layout_height="53dp"
-        android:fontFamily="@font/open_sans"
+        android:fontFamily="@font/productsans_regular"
         android:gravity="center_horizontal"
         android:text="Enter the OTP you recieved on your phone."
         android:textAlignment="center"
@@ -42,32 +42,37 @@
         app:layout_constraintTop_toBottomOf="@+id/textView"
         app:layout_constraintVertical_bias="0.049" />
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearLayout11"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:fontFamily="@font/roboto_regular"
-        android:text="If you don't recieve you OTP"
-        android:textColor="@color/colorGray"
-        android:textSize="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/firstPinView" />
+        app:layout_constraintTop_toBottomOf="@+id/firstPinView">
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/productsans_regular"
+            android:text="If you don't recieve you OTP? "
+            android:textColor="@color/colorGray"
+            android:textSize="12dp" />
 
 
-    <Button
-        android:id="@+id/resend"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAllCaps="false"
-        android:text="Resend OTP"
-        android:fontFamily="@font/roboto_bold"
-        android:layout_marginTop="30dp"
-        app:layout_constraintEnd_toEndOf="@+id/textView4"
-        app:layout_constraintStart_toStartOf="@+id/textView4"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        <Button
+            android:id="@+id/resend"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:fontFamily="@font/productsans_regular"
+            android:text="Resend OTP"
+            android:textAllCaps="false" />
+    </LinearLayout>
+
 
     <com.chaos.view.PinView
         android:id="@+id/firstPinView"
@@ -75,11 +80,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
+        android:cursorVisible="true"
         android:hint="Hint."
         android:inputType="number"
-        android:state_selected="true"
-        android:cursorVisible="true"
         android:itemBackground="#95D5D4D4"
+        android:state_selected="true"
         android:textColor="@color/colorPrimary"
         android:textSize="30sp"
         android:textStyle="bold"
@@ -90,10 +95,10 @@
         app:itemRadius="10dp"
         app:itemSpacing="4dp"
         app:itemWidth="50dp"
-        app:layout_constraintEnd_toEndOf="@+id/textView3"
+        app:layout_constraintEnd_toEndOf="@+id/otp_subtitle"
         app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="@+id/textView3"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:layout_constraintStart_toStartOf="@+id/otp_subtitle"
+        app:layout_constraintTop_toBottomOf="@+id/otp_subtitle"
         app:lineColor="@color/colorLightGray"
         app:lineWidth="2dp"
         app:viewType="rectangle" />
@@ -116,15 +121,32 @@
         android:id="@+id/timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/roboto_bold"
-        android:text="0:00"
+        android:fontFamily="@font/productsans_bold"
+        android:text="00"
         android:textColor="#000000"
-        android:textSize="15dp"
+        android:textSize="25dp"
+        app:layout_constraintBottom_toTopOf="@+id/change_email_phone_input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.472"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout11"
+        app:layout_constraintVertical_bias="0.497" />
+
+    <Button
+        android:id="@+id/change_email_phone_input"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:layout_marginBottom="40dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:text="Change Mobile Number"
+        android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/resend"
-        app:layout_constraintVertical_bias="0.241" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
