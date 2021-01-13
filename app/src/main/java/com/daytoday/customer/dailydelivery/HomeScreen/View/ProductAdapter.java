@@ -3,6 +3,7 @@ package com.daytoday.customer.dailydelivery.HomeScreen.View;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,14 +21,13 @@ import com.daytoday.customer.dailydelivery.R;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
     List<Product> buss_list;
     Context context;
-    FirebaseUser currUser = FirebaseAuth.getInstance().getCurrentUser();
+    FirebaseUser currUser;
 
     public ProductAdapter(List<Product> buss_list, Context context) {
         this.buss_list = buss_list;

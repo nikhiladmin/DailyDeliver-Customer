@@ -50,7 +50,7 @@ public class ProductFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(ProductViewModel.class);
         progressBar.setVisibility(View.VISIBLE);
         noBussView = view.findViewById(R.id.noBusslayout);
-        viewModel.getProduct().observe(getViewLifecycleOwner(), new Observer<List<Product>>() {
+        viewModel.getProduct().observe(getActivity(), new Observer<List<Product>>() {
             @Override
             public void onChanged(List<Product> products) {
                 ProductAdapter adapter = new ProductAdapter(products, getContext());

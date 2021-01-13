@@ -6,6 +6,8 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+
+import java.io.Serializable;
 public class Product implements Parcelable {
 
     @SerializedName("uniqueId")
@@ -53,7 +55,9 @@ public class Product implements Parcelable {
     @SerializedName("TotPen")
     @Expose
     private Integer totPen;
-
+    @SerializedName("token")
+    @Expose
+    private String token;
     @SerializedName("custConnected")
     @Expose
     private Boolean isConnected;
@@ -98,6 +102,7 @@ public class Product implements Parcelable {
         } else {
             totPen = in.readInt();
         }
+        token = in.readString();
         byte tmpIsConnected = in.readByte();
         isConnected = tmpIsConnected == 0 ? null : tmpIsConnected == 1;
     }
@@ -149,6 +154,7 @@ public class Product implements Parcelable {
             dest.writeByte((byte) 1);
             dest.writeInt(totPen);
         }
+        dest.writeString(token);
         dest.writeByte((byte) (isConnected == null ? 0 : isConnected ? 1 : 2));
     }
 
@@ -305,6 +311,14 @@ public class Product implements Parcelable {
         this.totPen = totPen;
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     @Override
     public String toString() {
         return "Product{" +
@@ -323,6 +337,8 @@ public class Product implements Parcelable {
                 ", totCan=" + totCan +
                 ", totEarn=" + totEarn +
                 ", totPen=" + totPen +
+                ", token='" + token + '\'' +
+                ", isConnected=" + isConnected +
                 '}';
     }
 }
