@@ -17,12 +17,14 @@ public class RealtimeDatabase {
         return secondDatabase;
     }
 
-    public static void initialiseApp(Context context){
+    public static void initialiseApp(Context context) {
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setApiKey(BuildConfig.Firebase_Server_Key)
                 .setApplicationId(BuildConfig.Firebase_Application_ID)
                 .setDatabaseUrl(BuildConfig.Firebase_Buss_Databse_Url)
                 .build();
-         bussApp = FirebaseApp.initializeApp(context, options, BUSINESS_DATABASE);
+        if(bussApp==null) {
+            bussApp = FirebaseApp.initializeApp(context, options, BUSINESS_DATABASE);
+        }
     }
 }
