@@ -10,4 +10,5 @@
     <string name="search">Search</string>
     <string name="notifications">Notifications</string>
     <string name="my_account">My Account</string>
+    <string name="notificationMsg">%s has added %s %s in %s list on %s</string>
 </resources>
