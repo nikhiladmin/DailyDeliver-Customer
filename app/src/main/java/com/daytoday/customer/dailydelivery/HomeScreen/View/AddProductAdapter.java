@@ -10,11 +10,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.daytoday.customer.dailydelivery.R;
+import com.daytoday.customer.dailydelivery.Utilities.RealtimeDatabase;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -46,7 +46,7 @@ public class AddProductAdapter extends RecyclerView.Adapter<AddProductAdapter.Ad
     }
 
     private void AddBuisness(String id) {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference reference = RealtimeDatabase.getInstance().getReference();
         FirebaseUser currentuser = FirebaseAuth.getInstance().getCurrentUser();
         reference.child("Buss_Cust_Rel").child(id).child(currentuser.getUid()).setValue(true);
         reference.child("Cust_Buss_Rel").child(currentuser.getUid()).child(id).setValue(true);
