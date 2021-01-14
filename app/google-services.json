@@ -1,111 +1,33 @@
 {
   "project_info": {
-    "project_number": "303150143203",
-    "firebase_url": "https://daily-deliver.firebaseio.com",
-    "project_id": "daily-deliver",
-    "storage_bucket": "daily-deliver.appspot.com"
+    "project_number": "551373974953",
+    "project_id": "daily-delivery-customer",
+    "storage_bucket": "daily-delivery-customer.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:303150143203:android:2ed65dd8e2c1da525fd7d6",
-        "android_client_info": {
-          "package_name": "com.daytoday.business.dailydelivery"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "303150143203-34pufcc5kef9vkhtr2mtbh495m0s5j31.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.daytoday.business.dailydelivery",
-            "certificate_hash": "2cce8809ca835466f56bf2a64598bff4966f113c"
-          }
-        },
-        {
-          "client_id": "303150143203-r02li5ms33smv5kbunoptdr7inhh1d66.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.daytoday.business.dailydelivery",
-            "certificate_hash": "baff82e5108bb65837f14869ce7969f54b6d4629"
-          }
-        },
-        {
-          "client_id": "303150143203-o24dilukmefdc9k5q4811ejl4f4u4bva.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.daytoday.business.dailydelivery",
-            "certificate_hash": "fcd3fb2e0a6b0494eb4ab228c4d0c71dc4eea749"
-          }
-        },
-        {
-          "client_id": "303150143203-mf2ufncgsp3u599rj8a4kjh5kijviedf.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.daytoday.business.dailydelivery",
-            "certificate_hash": "f909a8f7a02ef8ced17766e7d7b8498867fcc33f"
-          }
-        },
-        {
-          "client_id": "303150143203-vlotugbj8mrhufn384chns0ph5krfq84.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.daytoday.business.dailydelivery",
-            "certificate_hash": "0552b6341a24b5a5be8766b997e52f285e1477a7"
-          }
-        },
-        {
-          "client_id": "303150143203-022m1e9l6sm2419cbht3u3i8oljtfnvd.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.daytoday.business.dailydelivery",
-            "certificate_hash": "4dc0ed5533d2c20afdcb1ed38bc198c07abfe78e"
-          }
-        },
-        {
-          "client_id": "303150143203-51g815e31dea96og0sdbp5si8cn141fl.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBe5ebOKgaQf6drVdRH3jGt3c4-H7HRDQc"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "303150143203-51g815e31dea96og0sdbp5si8cn141fl.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:303150143203:android:c60f992365f395575fd7d6",
+        "mobilesdk_app_id": "1:551373974953:android:f0b921f30a54a4554e68b8",
         "android_client_info": {
           "package_name": "com.daytoday.customer.dailydelivery"
         }
       },
       "oauth_client": [
         {
-          "client_id": "303150143203-51g815e31dea96og0sdbp5si8cn141fl.apps.googleusercontent.com",
+          "client_id": "551373974953-nq5mlp2m5nvlo1hcoq6rl1hrpkc5u657.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBe5ebOKgaQf6drVdRH3jGt3c4-H7HRDQc"
+          "current_key": "AIzaSyANw5kYhr8okusV5Zd2eG462aqZhSxyKFU"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "303150143203-51g815e31dea96og0sdbp5si8cn141fl.apps.googleusercontent.com",
+              "client_id": "551373974953-nq5mlp2m5nvlo1hcoq6rl1hrpkc5u657.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
