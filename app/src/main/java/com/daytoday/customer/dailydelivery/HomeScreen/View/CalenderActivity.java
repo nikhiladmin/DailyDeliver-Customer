@@ -1,16 +1,12 @@
 package com.daytoday.customer.dailydelivery.HomeScreen.View;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.lifecycle.Observer;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.lifecycle.Observer;
@@ -25,11 +21,11 @@ import com.daytoday.customer.dailydelivery.Network.Client;
 import com.daytoday.customer.dailydelivery.R;
 import com.daytoday.customer.dailydelivery.Utilities.AppUtils;
 import com.daytoday.customer.dailydelivery.Utilities.FirebaseUtils;
+import com.daytoday.customer.dailydelivery.Utilities.RealtimeDatabase;
 import com.daytoday.customer.dailydelivery.Utilities.Request;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
@@ -157,7 +153,7 @@ public class CalenderActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void sendToReject(CalendarDay day, Transaction transaction) {
         HashMap<String, String> value = FirebaseUtils.getValueMapOfRequest(day, transaction.getQuantity(), Request.REJECTED);
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Buss_Cust_DayWise").child(bussCustId);
+        DatabaseReference reference = RealtimeDatabase.getInstance().getReference().child("Buss_Cust_DayWise").child(bussCustId);
         reference.child(FirebaseUtils.getDatePath(day))
                 .setValue(value);
         FirebaseUtils.incrementAccToReq(day, reference, transaction.getQuantity(), Request.REJECTED);
@@ -167,7 +163,7 @@ public class CalenderActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void SendToAccept(CalendarDay day, Transaction transaction) {
         HashMap<String, String> value = FirebaseUtils.getValueMapOfRequest(day, transaction.getQuantity(), Request.ACCEPTED);
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Buss_Cust_DayWise").child(bussCustId);
+        DatabaseReference reference = RealtimeDatabase.getInstance().getReference().child("Buss_Cust_DayWise").child(bussCustId);
         reference.child(FirebaseUtils.getDatePath(day))
                 .setValue(value);
         FirebaseUtils.incrementAccToReq(day, reference, transaction.getQuantity(), Request.ACCEPTED);
