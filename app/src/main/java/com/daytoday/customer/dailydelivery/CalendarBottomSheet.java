@@ -2,7 +2,6 @@ package com.daytoday.customer.dailydelivery;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,19 +14,22 @@ import androidx.databinding.DataBindingUtil;
 import com.daytoday.customer.dailydelivery.HomeScreen.Model.Product;
 import com.daytoday.customer.dailydelivery.HomeScreen.Model.Transaction;
 import com.daytoday.customer.dailydelivery.HomeScreen.View.CalenderActivity;
+import com.daytoday.customer.dailydelivery.Network.Response.RequestNotification;
+import com.daytoday.customer.dailydelivery.Network.Response.SendDataModel;
 import com.daytoday.customer.dailydelivery.Utilities.FirebaseUtils;
+import com.daytoday.customer.dailydelivery.Utilities.NotificationService;
+import com.daytoday.customer.dailydelivery.Utilities.RealtimeDatabase;
 import com.daytoday.customer.dailydelivery.Utilities.Request;
+import com.daytoday.customer.dailydelivery.Utilities.SaveOfflineManager;
 import com.daytoday.customer.dailydelivery.databinding.BottomsheetCalendarDetailsBinding;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 public class CalendarBottomSheet extends BottomSheetDialogFragment {
 
@@ -108,20 +110,44 @@ public class CalendarBottomSheet extends BottomSheetDialogFragment {
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void sendToReject(CalendarDay day, Transaction transaction) {
         HashMap<String,String> value = FirebaseUtils.getValueMapOfRequest(day,transaction.getQuantity(), Request.REJECTED);
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Buss_Cust_DayWise").child(product.getUniqueId().toString());
+        DatabaseReference reference = RealtimeDatabase.getInstance().getReference().child("Buss_Cust_DayWise").child(product.getUniqueId().toString());
         reference.child(FirebaseUtils.getDatePath(day))
                 .setValue(value);
-        FirebaseUtils.incrementAccToReq(day,reference,Request.REJECTED);
-        FirebaseUtils.decrementAccToReq(day,reference,Request.PENDING);
+        FirebaseUtils.incrementAccToReq(day,reference,transaction.getQuantity(),Request.REJECTED);
+        FirebaseUtils.decrementAccToReq(day,reference,transaction.getQuantity(),Request.PENDING);
+        //TODO Need To Complete This
+        if (product.getToken()!=null) {
+            RequestNotification requestNotification = new RequestNotification()
+                    .setToken(product.getToken())
+                    .setSendDataModel(new SendDataModel()
+                            .setFromWhichPerson(SaveOfflineManager.getUserName(getContext()))
+                            .setFromWhichPersonID(SaveOfflineManager.getUserId(getContext()))
+                            .setNotificationStatus(Request.REJECTED)
+                            .setProductName(product.getName())
+                            .setQuantity(transaction.getQuantity()));
+            NotificationService.sendNotification(requestNotification);
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void sendToAccept(CalendarDay day, Transaction transaction) {
         HashMap<String,String> value = FirebaseUtils.getValueMapOfRequest(day,transaction.getQuantity(), Request.ACCEPTED);
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Buss_Cust_DayWise").child(product.getUniqueId().toString());
+        DatabaseReference reference = RealtimeDatabase.getInstance().getReference().child("Buss_Cust_DayWise").child(product.getUniqueId().toString());
         reference.child(FirebaseUtils.getDatePath(day))
                 .setValue(value);
-        FirebaseUtils.incrementAccToReq(day,reference,Request.ACCEPTED);
-        FirebaseUtils.decrementAccToReq(day,reference,Request.PENDING);
+        FirebaseUtils.incrementAccToReq(day,reference, transaction.getQuantity(), Request.ACCEPTED);
+        FirebaseUtils.decrementAccToReq(day,reference, transaction.getQuantity(), Request.PENDING);
+        //TODO Need To Complete This
+        if (product.getToken()!=null) {
+            RequestNotification requestNotification = new RequestNotification()
+                    .setToken(product.getToken())
+                    .setSendDataModel(new SendDataModel()
+                            .setFromWhichPerson(SaveOfflineManager.getUserName(getContext()))
+                            .setFromWhichPersonID(SaveOfflineManager.getUserId(getContext()))
+                            .setNotificationStatus(Request.ACCEPTED)
+                            .setProductName(product.getName())
+                            .setQuantity(transaction.getQuantity()));
+            NotificationService.sendNotification(requestNotification);
+        }
     }
 }

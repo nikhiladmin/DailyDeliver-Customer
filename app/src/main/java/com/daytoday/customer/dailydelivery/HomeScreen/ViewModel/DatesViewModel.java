@@ -1,7 +1,6 @@
 package com.daytoday.customer.dailydelivery.HomeScreen.ViewModel;
 
 import android.os.Build;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -9,13 +8,12 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.daytoday.customer.dailydelivery.HomeScreen.Model.Transaction;
-import com.daytoday.customer.dailydelivery.Utilities.AppUtils;
 import com.daytoday.customer.dailydelivery.Utilities.FirebaseUtils;
+import com.daytoday.customer.dailydelivery.Utilities.RealtimeDatabase;
 import com.daytoday.customer.dailydelivery.Utilities.Request;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
@@ -36,15 +34,18 @@ public class DatesViewModel extends ViewModel {
 
     String busscustId;
 
-    public DatesViewModel(String busscustId) {
-        this.busscustId = busscustId;
+    public DatesViewModel() {
         datesRepo = new DatesRepo();
         isLoading.setValue(false);
     }
 
+    public void setBusscustId(String busscustId) {
+        this.busscustId = busscustId;
+    }
+
     public MutableLiveData<List<Transaction>> getTotalList(CalendarDay day) {
         isLoading.setValue(true);
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
+        DatabaseReference reference = RealtimeDatabase.getInstance().getReference()
                 .child("Buss_Cust_DayWise").child(busscustId)
                 .child(FirebaseUtils.getAllMonthPath("" + day.getYear(),day.getMonth() + ""));
         getCurrentMonthTotal(day);
@@ -75,7 +76,7 @@ public class DatesViewModel extends ViewModel {
         totalPendingMonthlyLiveData.setValue("0");
         totalRejectedMonthlyLiveData.setValue("0");
         totalAcceptedMonthlyLiveData.setValue("0");
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
+        DatabaseReference reference = RealtimeDatabase.getInstance().getReference()
                 .child("Buss_Cust_DayWise").child(busscustId)
                 .child(FirebaseUtils.getAllMonthPath(day.getYear()+"",""+day.getMonth())).child("Monthly-Total");
         reference.addValueEventListener(new ValueEventListener() {
@@ -111,7 +112,7 @@ public class DatesViewModel extends ViewModel {
         totalRejectedYearlyLiveData.setValue("0");
         totalAcceptedYearlyLiveData.setValue("0");
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
+        DatabaseReference reference = RealtimeDatabase.getInstance().getReference()
                 .child("Buss_Cust_DayWise").child(busscustId)
                 .child(day.getYear()+"").child("Yearly-Total");
         reference.addValueEventListener(new ValueEventListener() {

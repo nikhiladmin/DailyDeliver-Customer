@@ -58,9 +58,11 @@ public class ProductFragment extends BottomSheetDialogFragment {
         viewModel = new ViewModelProvider(this).get(ProductViewModel.class);
         progressBar.setVisibility(View.VISIBLE);
         noBussView = view.findViewById(R.id.noBusslayout);
+
         DividerItemDecoration itemDecor = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
         product_list.addItemDecoration(itemDecor);
         viewModel.getProduct().observe(getViewLifecycleOwner(), new Observer<List<Product>>() {
+
             @Override
             public void onChanged(List<Product> products) {
                 ProductAdapter adapter = new ProductAdapter(products, getContext());
