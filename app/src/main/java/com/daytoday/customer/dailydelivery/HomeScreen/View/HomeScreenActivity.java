@@ -57,11 +57,13 @@ public class HomeScreenActivity extends AppCompatActivity implements BottomNavig
 //        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        bottomNavigationView.setItemIconTintList(null);
         toolbar=findViewById(R.id.toolbar_home);
         viewPager2 = findViewById(R.id.ViewPager);
         apiInterface = Client.getClient().create(ApiInterface.class);
         updateFirebaseToken();
         setSupportActionBar(toolbar);
+
         viewPager2.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
