@@ -54,11 +54,6 @@ public class LoginPage extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private AlertDialog alertDialog;
 
-
-
-
-
-
     //for Google Login
     private GoogleSignInClient mGoogleSignInClient;
     private GoogleSignInOptions gso;
