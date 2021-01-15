@@ -13,10 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
 import com.daytoday.customer.dailydelivery.LoginActivity.AdditionalInfo;
@@ -29,6 +25,7 @@ import com.daytoday.customer.dailydelivery.Utilities.AppConstants;
 import com.daytoday.customer.dailydelivery.Utilities.SaveOfflineManager;
 import com.daytoday.customer.dailydelivery.ViewPagerAdapter;
 import com.daytoday.customer.dailydelivery.searchui.SearchFragment;
+import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -49,6 +46,7 @@ public class HomeScreenActivity extends AppCompatActivity implements BottomNavig
     SearchFragment searchFragment;
     NotificationFragment notificationFragment;
     UserFragment userFragment;
+    BadgeDrawable badgeDrawable;
     FirebaseAuth mAuth;
     FirebaseUser currentUser;
 
@@ -62,6 +60,7 @@ public class HomeScreenActivity extends AppCompatActivity implements BottomNavig
         toolbar=findViewById(R.id.toolbar_home);
         viewPager2 = findViewById(R.id.ViewPager);
         apiInterface = Client.getClient().create(ApiInterface.class);
+        updateFirebaseToken();
         setSupportActionBar(toolbar);
         viewPager2.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -86,6 +85,17 @@ public class HomeScreenActivity extends AppCompatActivity implements BottomNavig
             }
         });
         setupViewPager(viewPager2);
+        addingBadgeToBottomNavigationView(bottomNavigationView);
+    }
+
+    private void addingBadgeToBottomNavigationView(BottomNavigationView bottomNavigationView) {
+        badgeDrawable = bottomNavigationView.getOrCreateBadge(R.id.notification);
+        //TODO whenever want to set number and show call the commented part
+        //badgeDrawable.setNumber(3);
+        //badgeDrawable.setVisible(true);
+        badgeDrawable.setVisible(false);
+        badgeDrawable.setHorizontalOffset(15);
+        badgeDrawable.setVerticalOffset(4);
     }
 
     public void setupViewPager(ViewPager viewPager2)
@@ -230,6 +240,28 @@ public class HomeScreenActivity extends AppCompatActivity implements BottomNavig
                 Log.i(AppConstants.ERROR_LOG,"Some Error Occurred in HomeScreenActivity Error is : { " + t.getMessage() + " }");
             }
         });
+    }
+
+
+    public void updateFirebaseToken() {
+        String token = SaveOfflineManager.getFireBaseToken(this);
+        Boolean FirebaseTokenChangedOrNot = SaveOfflineManager.getFireBaseTokenChangedOrNot(this);
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        if (token != null && FirebaseTokenChangedOrNot){
+            Call<YesNoResponse> updateFirebaseTokenCall = apiInterface.updateFirebaseToken(token,userId);
+            updateFirebaseTokenCall.enqueue(new Callback<YesNoResponse>() {
+                @Override
+                public void onResponse(Call<YesNoResponse> call, Response<YesNoResponse> response) {
+                    Log.i("Firebase","Response Successful " + response.body().getMessage());
+                    SaveOfflineManager.setFireBaseTokenChangedOrNot(HomeScreenActivity.this,false);
+                }
+
+                @Override
+                public void onFailure(Call<YesNoResponse> call, Throwable t) {
+                    Log.i("Firebase","Error Occurred :-> " + t.getMessage());
+                }
+            });
+        }
     }
 
     @Override

@@ -1,53 +1,37 @@
 package com.daytoday.customer.dailydelivery.HomeScreen.View;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.lifecycle.Observer;
-
-import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.daytoday.customer.dailydelivery.CalendarBottomSheet;
-import com.daytoday.customer.dailydelivery.Dates;
 import com.daytoday.customer.dailydelivery.HomeScreen.Model.Product;
 import com.daytoday.customer.dailydelivery.HomeScreen.Model.Transaction;
 import com.daytoday.customer.dailydelivery.HomeScreen.ViewModel.DatesViewModel;
 import com.daytoday.customer.dailydelivery.Network.ApiInterface;
 import com.daytoday.customer.dailydelivery.Network.Client;
-import com.daytoday.customer.dailydelivery.Network.Response.YesNoResponse;
 import com.daytoday.customer.dailydelivery.R;
-import com.daytoday.customer.dailydelivery.Utilities.AppConstants;
 import com.daytoday.customer.dailydelivery.Utilities.AppUtils;
 import com.daytoday.customer.dailydelivery.Utilities.FirebaseUtils;
+import com.daytoday.customer.dailydelivery.Utilities.RealtimeDatabase;
 import com.daytoday.customer.dailydelivery.Utilities.Request;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textview.MaterialTextView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.crashlytics.FirebaseCrashlytics;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
-import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 
 import java.util.HashMap;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class CalenderActivity extends AppCompatActivity {
     public static final String CURRENT_PRODUCT = "CURRENT_PRODUCT";
@@ -75,7 +59,8 @@ public class CalenderActivity extends AppCompatActivity {
         calendarView = findViewById(R.id.calendar);
         progressBar = findViewById(R.id.progress_bar);
         progressBar.setVisibility(View.VISIBLE);
-        datesViewModel = new DatesViewModel(bussCustId);
+        datesViewModel = new ViewModelProvider(this).get(DatesViewModel.class);
+        datesViewModel.setBusscustId(currentProduct.getUniqueId().toString());
         apiInterface = Client.getClient().create(ApiInterface.class);
         monthCardView = findViewById(R.id.month_card);
         totalCardView = findViewById(R.id.total_card);
@@ -168,21 +153,21 @@ public class CalenderActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void sendToReject(CalendarDay day, Transaction transaction) {
         HashMap<String, String> value = FirebaseUtils.getValueMapOfRequest(day, transaction.getQuantity(), Request.REJECTED);
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Buss_Cust_DayWise").child(bussCustId);
+        DatabaseReference reference = RealtimeDatabase.getInstance().getReference().child("Buss_Cust_DayWise").child(bussCustId);
         reference.child(FirebaseUtils.getDatePath(day))
                 .setValue(value);
-        FirebaseUtils.incrementAccToReq(day, reference, Request.REJECTED);
-        FirebaseUtils.decrementAccToReq(day, reference, Request.PENDING);
+        FirebaseUtils.incrementAccToReq(day, reference, transaction.getQuantity(), Request.REJECTED);
+        FirebaseUtils.decrementAccToReq(day, reference, transaction.getQuantity(), Request.PENDING);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void SendToAccept(CalendarDay day, Transaction transaction) {
         HashMap<String, String> value = FirebaseUtils.getValueMapOfRequest(day, transaction.getQuantity(), Request.ACCEPTED);
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Buss_Cust_DayWise").child(bussCustId);
+        DatabaseReference reference = RealtimeDatabase.getInstance().getReference().child("Buss_Cust_DayWise").child(bussCustId);
         reference.child(FirebaseUtils.getDatePath(day))
                 .setValue(value);
-        FirebaseUtils.incrementAccToReq(day, reference, Request.ACCEPTED);
-        FirebaseUtils.decrementAccToReq(day, reference, Request.PENDING);
+        FirebaseUtils.incrementAccToReq(day, reference, transaction.getQuantity(), Request.ACCEPTED);
+        FirebaseUtils.decrementAccToReq(day, reference, transaction.getQuantity(), Request.PENDING);
     }
 
 
