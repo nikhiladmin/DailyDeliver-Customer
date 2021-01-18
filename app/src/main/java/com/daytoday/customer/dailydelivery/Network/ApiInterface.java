@@ -92,4 +92,12 @@ public interface ApiInterface {
 
     @GET("login-cust")
     Call<AuthUserResponse> loginUser(@Query("custid") String custid);
+
+
+    @GET("send-notification")
+    Call<YesNoResponse> sendNotification(@Query("to") String to ,
+                                         @Query("from") String from,
+                                         @Query("status") Integer status,
+                                         @Query("quantity") String quantity,
+                                         @Query("name") String name);
 }

@@ -124,7 +124,8 @@ public class CalendarBottomSheet extends BottomSheetDialogFragment {
                             .setFromWhichPersonID(SaveOfflineManager.getUserId(getContext()))
                             .setNotificationStatus(Request.REJECTED)
                             .setProductName(product.getName())
-                            .setQuantity(transaction.getQuantity()));
+                            .setQuantity(transaction.getQuantity())
+                            .setToWhichPersonId(product.getBussuserid()));
             NotificationService.sendNotification(requestNotification);
         }
     }
@@ -146,7 +147,8 @@ public class CalendarBottomSheet extends BottomSheetDialogFragment {
                             .setFromWhichPersonID(SaveOfflineManager.getUserId(getContext()))
                             .setNotificationStatus(Request.ACCEPTED)
                             .setProductName(product.getName())
-                            .setQuantity(transaction.getQuantity()));
+                            .setQuantity(transaction.getQuantity())
+                            .setToWhichPersonId(product.getBussuserid()));
             NotificationService.sendNotification(requestNotification);
         }
     }
