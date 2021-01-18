@@ -18,6 +18,7 @@ import com.daytoday.customer.dailydelivery.Network.Client;
 import com.daytoday.customer.dailydelivery.Network.Response.ChannelInformation;
 import com.daytoday.customer.dailydelivery.Network.Response.RequestNotification;
 import com.daytoday.customer.dailydelivery.Network.Response.SendDataModel;
+import com.daytoday.customer.dailydelivery.Network.Response.YesNoResponse;
 import com.daytoday.customer.dailydelivery.R;
 import com.daytoday.customer.dailydelivery.WalkThrough.SplashScreenActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -124,7 +125,35 @@ public class NotificationService extends FirebaseMessagingService {
     }
 
     public static void sendNotification(RequestNotification requestNotification) {
+        // Send Notification to FCM Server
         ApiInterface service = Client.getFirebaseClient().create(ApiInterface.class);
+        sendNotificationToFCM(requestNotification, service);
+        // Send Notification To Our Server
+        service = Client.getClient().create(ApiInterface.class);
+        SendDataModel sendDataModel = requestNotification.getSendDataModel();
+        sendNotificationToOurServer(service, sendDataModel);
+    }
+
+    private static void sendNotificationToOurServer(ApiInterface service, SendDataModel sendDataModel) {
+        Call<YesNoResponse> notificationCall = service.sendNotification(sendDataModel.getToWhichPersonId(),
+                sendDataModel.getFromWhichPersonID(),
+                Request.getRespectiveIntegerValue(sendDataModel.getNotificationStatus()),
+                sendDataModel.getQuantity()
+                ,sendDataModel.getProductName());
+        notificationCall.enqueue(new Callback<YesNoResponse>() {
+            @Override
+            public void onResponse(Call<YesNoResponse> call, Response<YesNoResponse> response) {
+                Log.i(TAG,"Response Successful " + response.body().getMessage());
+            }
+
+            @Override
+            public void onFailure(Call<YesNoResponse> call, Throwable t) {
+                Log.i(TAG,"Error Occurred :-> " + t.getMessage());
+            }
+        });
+    }
+
+    private static void sendNotificationToFCM(RequestNotification requestNotification, ApiInterface service) {
         Call<ResponseBody> messagingCall = service.postNotification(requestNotification);
         messagingCall.enqueue(new Callback<ResponseBody>() {
             @Override
