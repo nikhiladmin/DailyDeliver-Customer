@@ -1,6 +1,8 @@
 package com.daytoday.customer.dailydelivery.HomeScreen.View;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.daytoday.customer.dailydelivery.HomeScreen.Model.Product;
 import com.daytoday.customer.dailydelivery.R;
 import com.squareup.picasso.Picasso;
@@ -49,7 +52,7 @@ public class BusinessAdapter extends RecyclerView.Adapter<BusinessAdapter.Busine
     public void onBindViewHolder(@NonNull BusinessViewHolder holder, int position) {
         holder.buss_name.setText(productList.get(position).getName());
         holder.buss_adress.setText(productList.get(position).getAddress());
-        holder.buss_price.setText("Rs. " + productList.get(position).getPrice() + " - " + productList.get(position).getDOrM());
+        holder.buss_price.setText("₹" + productList.get(position).getPrice() + " - " +(productList.get(position).getDOrM().equals("D") ? "Daily" : "Monthly"));
 
         if (productList.get(position).getImgurl() != null) {
             Picasso.get()
@@ -70,6 +73,11 @@ public class BusinessAdapter extends RecyclerView.Adapter<BusinessAdapter.Busine
                 holder.add_buss.setText("Added");
             }
         });
+        holder.find_location.setOnClickListener(view -> {
+                String uri  = "https://maps.google.co.in/maps?q="+productList.get(position).getAddress();
+            Intent goToAddress = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+            context.startActivity(goToAddress);
+        });
     }
 
     @Override
@@ -81,6 +89,7 @@ public class BusinessAdapter extends RecyclerView.Adapter<BusinessAdapter.Busine
         ImageView buss_img;
         Button add_buss;
         TextView buss_name,buss_adress,buss_price;
+        LottieAnimationView find_location;
         public BusinessViewHolder(@NonNull View itemView) {
             super(itemView);
             buss_img = itemView.findViewById(R.id.img_buss);
@@ -88,6 +97,7 @@ public class BusinessAdapter extends RecyclerView.Adapter<BusinessAdapter.Busine
             buss_name = itemView.findViewById(R.id.product_name);
             buss_adress = itemView.findViewById(R.id.product_address);
             buss_price = itemView.findViewById(R.id.product_price);
+            find_location = itemView.findViewById(R.id.find_location);
         }
     }
 }

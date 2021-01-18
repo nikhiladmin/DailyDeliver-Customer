@@ -5,19 +5,16 @@
 
     <ImageView
         android:id="@+id/boxlogo"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_marginTop="130dp"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/box001" />
-
-    <com.google.android.material.textview.MaterialTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/boxlogo"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="Not connected with any Business."
-        android:textSize="22sp"
-        android:textStyle="bold" />
+
+        android:src="@drawable/ic_help" />
+
+
 
 </RelativeLayout>

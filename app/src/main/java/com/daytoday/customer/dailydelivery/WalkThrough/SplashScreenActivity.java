@@ -27,6 +27,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSupportActionBar().hide();
 
+
         RealtimeDatabase.initialiseApp(SplashScreenActivity.this);
 
         FirebaseMessaging.getInstance().getToken()
@@ -37,6 +38,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                         SaveOfflineManager.setFireBaseToken(SplashScreenActivity.this,task.getResult());
                     }
                 });
+
 
         new Handler().postDelayed(new Runnable() {
             @Override
