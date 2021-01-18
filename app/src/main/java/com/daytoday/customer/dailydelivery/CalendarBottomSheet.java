@@ -61,14 +61,14 @@ public class CalendarBottomSheet extends BottomSheetDialogFragment {
         if(transaction!=null)
         {
             binding.quantity.setText(""+transaction.getQuantity());
-            binding.totalPrice.setText(product.getPrice()+" / "+product.getdOrM());
+            binding.totalPrice.setText(product.getPrice()+" / "+(product.getdOrM().equals("D") ? "Daily" : "Monthly"));
             Date parseDate = null;
             try {
-                parseDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(transaction.getTime());
+                parseDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(transaction.getTime());
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            SimpleDateFormat formatter=new SimpleDateFormat("E,dd MMM yyyy HH:mm:ss");
+            SimpleDateFormat formatter=new SimpleDateFormat("E,dd MMM yyyy HH:mm");
             String s= formatter.format(parseDate);
             binding.newReqMade.setText("Request Made on "+s);
 

@@ -2,6 +2,7 @@ package com.daytoday.customer.dailydelivery.WalkThrough;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -33,8 +34,9 @@ public class WalkThroughActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_walk_through);
 
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         getSupportActionBar().hide();
+        getWindow().setStatusBarColor(Color.WHITE);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
 
         if(restorePrefData()) {
@@ -50,8 +52,8 @@ public class WalkThroughActivity extends AppCompatActivity {
 
         //fill the list screen
         final List<ScreenItem> list_of_items = new ArrayList<>();
-        list_of_items.add(new ScreenItem(R.drawable.logo_launcher,"Experience a New Way to manage your Daily Needs"));
-        list_of_items.add(new ScreenItem(R.drawable.logo_launcher,"All Your Daily Needs At your Fingertips"));
+        list_of_items.add(new ScreenItem(R.drawable.ic_customer_splash_1,"Experience a New Way to manage your Daily Needs","MANAGE PRODUCT"));
+        list_of_items.add(new ScreenItem(R.drawable.ic_customer_splash_2,"All Your Daily Needs At your Fingertips","REQUEST | ACCEPT | DELIVER"));
 
 
         walk_through_Pager = findViewById(R.id.Walk_through_pager);
@@ -105,8 +107,8 @@ public class WalkThroughActivity extends AppCompatActivity {
         double displaydp = Math.sqrt(dpHeight*dpHeight + dpWidth * dpWidth);
         Log.i("ans is","dpheight" + dpHeight);
         Log.i("ans is","dpwidth" + dpWidth);
-        get_started__btn.setWidth((int)(dpWidth * 2));
-        get_started__btn.setTextSize((float) (displaydp * 0.025));
+//        get_started__btn.setWidth((int)(dpWidth * 2));
+//        get_started__btn.setTextSize((float) (displaydp * 0.025));
     }
 
     private boolean restorePrefData() {
