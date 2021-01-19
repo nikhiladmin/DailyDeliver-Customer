@@ -52,7 +52,11 @@ public class NotificationAdapter extends PagedListAdapter<Notification, Notifica
         String from = getItem(position).getFrom();
         String quantity = getItem(position).getQuantity();
         String name = getItem(position).getName();
-        String time = getItem(position).getTime();
+        String time = "";
+        if(getItem(position).getTime()!=null && !getItem(position).getTime().isEmpty())
+        {
+            time = AppUtils.getAgoTime(getItem(position).getTime());
+        }
         String status = "";
         String currStatus = getItem(position).getStatus();
         if (currStatus.equals("1")) {
@@ -72,7 +76,6 @@ public class NotificationAdapter extends PagedListAdapter<Notification, Notifica
             holder.notiStatusText.setVisibility(View.GONE);
         }
         holder.t1.setText(context.getResources().getString(R.string.notificationMsg, from, quantity, name, status, time));
-        AppUtils.getAgoTime(getItem(position).getTime());
     }
 
     public class NotificationViewHolder extends RecyclerView.ViewHolder {
