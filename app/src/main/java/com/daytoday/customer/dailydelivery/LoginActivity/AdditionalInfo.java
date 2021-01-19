@@ -93,7 +93,7 @@ public class AdditionalInfo extends AppCompatActivity {
         isPhoneAuth = getIntent().getBooleanExtra("isPhoneAuth", false);
         FirebaseUser user =mAuth.getCurrentUser();
         if(!isPhoneAuth){
-            if(user!=null){
+            if(user!=null && user.getDisplayName() != null && user.getDisplayName().isEmpty()){
                 String name[] = user.getDisplayName().split(" ");
                 if(name.length==1){
                     firstName.setText(name[0]);
