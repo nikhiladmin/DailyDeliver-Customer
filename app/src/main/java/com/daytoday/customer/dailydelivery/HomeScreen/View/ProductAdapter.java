@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 import com.daytoday.customer.dailydelivery.HomeScreen.Model.Product;
 import com.daytoday.customer.dailydelivery.R;
@@ -46,11 +47,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         holder.buss_name.setText(buss_list.get(position).getName());
         holder.buss_add.setText(buss_list.get(position).getAddress());
-        holder.price.setText("Rs. " + buss_list.get(position).getPrice() + " - " + buss_list.get(position).getDOrM());
+        holder.price.setText("₹" + buss_list.get(position).getPrice() + " - " +(buss_list.get(position).getDOrM().equals("D") ? "Daily" : "Monthly"));
         // holder.customers.setText("( " + buss_list.get(position).getCust_cout() + " Customers )");
         if (buss_list.get(position).getImgurl() != null) {
             Glide.with(context).load(buss_list.get(position).getImgurl()).error(R.drawable.box001).into(holder.buss_img);
         }
+
         if (buss_list.get(position).getPhoneno() != null) {
             holder.call_img.setOnClickListener(v -> {
                 Intent intent = new Intent(Intent.ACTION_DIAL);
@@ -68,6 +70,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             intent.putExtra(CalenderActivity.CUSTOMER_ID,currUser.getUid());
             context.startActivity(intent);
         });
+
+        holder.find_location.setOnClickListener(view -> {
+            String uri  = "https://maps.google.co.in/maps?q="+buss_list.get(position).getAddress();
+            Intent goToAddress = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+            context.startActivity(goToAddress);
+        });
     }
 
     @Override
@@ -80,7 +88,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         TextView buss_name, buss_add, price, customers;
         ImageView buss_img, call_img;
         MaterialCardView cardView;
-
+        LottieAnimationView find_location;
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
             buss_add = itemView.findViewById(R.id.buss_address);
@@ -90,6 +98,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             buss_img = itemView.findViewById(R.id.buss_img);
             call_img = itemView.findViewById(R.id.call_buss_btn);
             cardView = itemView.findViewById(R.id.producardview);
+            find_location = itemView.findViewById(R.id.f_location);
         }
     }
 }

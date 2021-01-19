@@ -18,12 +18,12 @@ import com.daytoday.customer.dailydelivery.Network.Response.RequestNotification;
 import com.daytoday.customer.dailydelivery.Network.Response.SendDataModel;
 import com.daytoday.customer.dailydelivery.Utilities.FirebaseUtils;
 import com.daytoday.customer.dailydelivery.Utilities.NotificationService;
+import com.daytoday.customer.dailydelivery.Utilities.RealtimeDatabase;
 import com.daytoday.customer.dailydelivery.Utilities.Request;
 import com.daytoday.customer.dailydelivery.Utilities.SaveOfflineManager;
 import com.daytoday.customer.dailydelivery.databinding.BottomsheetCalendarDetailsBinding;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.text.ParseException;
@@ -61,14 +61,14 @@ public class CalendarBottomSheet extends BottomSheetDialogFragment {
         if(transaction!=null)
         {
             binding.quantity.setText(""+transaction.getQuantity());
-            binding.totalPrice.setText(product.getPrice()+" / "+product.getdOrM());
+            binding.totalPrice.setText(product.getPrice()+" / "+(product.getdOrM().equals("D") ? "Daily" : "Monthly"));
             Date parseDate = null;
             try {
-                parseDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(transaction.getTime());
+                parseDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(transaction.getTime());
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            SimpleDateFormat formatter=new SimpleDateFormat("E,dd MMM yyyy HH:mm:ss");
+            SimpleDateFormat formatter=new SimpleDateFormat("E,dd MMM yyyy HH:mm");
             String s= formatter.format(parseDate);
             binding.newReqMade.setText("Request Made on "+s);
 
@@ -110,7 +110,7 @@ public class CalendarBottomSheet extends BottomSheetDialogFragment {
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void sendToReject(CalendarDay day, Transaction transaction) {
         HashMap<String,String> value = FirebaseUtils.getValueMapOfRequest(day,transaction.getQuantity(), Request.REJECTED);
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Buss_Cust_DayWise").child(product.getUniqueId().toString());
+        DatabaseReference reference = RealtimeDatabase.getInstance().getReference().child("Buss_Cust_DayWise").child(product.getUniqueId().toString());
         reference.child(FirebaseUtils.getDatePath(day))
                 .setValue(value);
         FirebaseUtils.incrementAccToReq(day,reference,transaction.getQuantity(),Request.REJECTED);
@@ -132,7 +132,7 @@ public class CalendarBottomSheet extends BottomSheetDialogFragment {
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void sendToAccept(CalendarDay day, Transaction transaction) {
         HashMap<String,String> value = FirebaseUtils.getValueMapOfRequest(day,transaction.getQuantity(), Request.ACCEPTED);
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Buss_Cust_DayWise").child(product.getUniqueId().toString());
+        DatabaseReference reference = RealtimeDatabase.getInstance().getReference().child("Buss_Cust_DayWise").child(product.getUniqueId().toString());
         reference.child(FirebaseUtils.getDatePath(day))
                 .setValue(value);
         FirebaseUtils.incrementAccToReq(day,reference, transaction.getQuantity(), Request.ACCEPTED);

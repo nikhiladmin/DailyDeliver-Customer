@@ -10,6 +10,7 @@
     <color name="colorPending">#ffbb33</color>
     <color name="colorGray">#777777</color>
     <color name="colorLightGray">#AFAEAE</color>
+    <color name="colorGrey50">#FFFAFAFA</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorIndicatorSelected">#4c84ff</color>
     <color name="colorBlack">#000000</color>

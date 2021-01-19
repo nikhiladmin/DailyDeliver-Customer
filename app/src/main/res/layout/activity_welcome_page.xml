@@ -11,13 +11,12 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="88dp"
         android:fontFamily="@font/productsans_bold"
         android:text="Welcome"
         android:textColor="#000"
         android:textSize="40dp"
         app:layout_constraintStart_toStartOf="@+id/imageView2"
-        app:layout_constraintTop_toTopOf="@+id/imageView2" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -29,7 +28,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline4"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/menu_user" />
+        app:srcCompat="@drawable/ic_logonew" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/textView2"
