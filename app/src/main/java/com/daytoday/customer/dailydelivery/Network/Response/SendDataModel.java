@@ -2,14 +2,16 @@ package com.daytoday.customer.dailydelivery.Network.Response;
 
 public class SendDataModel {
     private String notificationStatus,quantity,productName;
-    private String fromWhichPerson,fromWhichPersonID, toWhichPerson;
+    private String fromWhichPerson,fromWhichPersonID, toWhichPerson,toWhichPersonId;
 
-    public SendDataModel(String notificationStatus, String quantity, String productName, String fromWhichPerson, String toWhichPerson) {
+    public SendDataModel(String notificationStatus, String quantity, String productName, String fromWhichPerson, String fromWhichPersonID, String toWhichPerson, String toWhichPersonId) {
         this.notificationStatus = notificationStatus;
         this.quantity = quantity;
         this.productName = productName;
         this.fromWhichPerson = fromWhichPerson;
+        this.fromWhichPersonID = fromWhichPersonID;
         this.toWhichPerson = toWhichPerson;
+        this.toWhichPersonId = toWhichPersonId;
     }
 
     public SendDataModel() {
@@ -17,12 +19,14 @@ public class SendDataModel {
 
     @Override
     public String toString() {
-        return "SendDataModel { " +
+        return "SendDataModel{" +
                 "notificationStatus='" + notificationStatus + '\'' +
-                " , quantity='" + quantity + '\'' +
-                " , productName='" + productName + '\'' +
-                " , fromWhichPerson='" + fromWhichPerson + '\'' +
-                " , toWhichPerson='" + toWhichPerson + '\'' +
+                ", quantity='" + quantity + '\'' +
+                ", productName='" + productName + '\'' +
+                ", fromWhichPerson='" + fromWhichPerson + '\'' +
+                ", fromWhichPersonID='" + fromWhichPersonID + '\'' +
+                ", toWhichPerson='" + toWhichPerson + '\'' +
+                ", toWhichPersonId='" + toWhichPersonId + '\'' +
                 '}';
     }
 
@@ -78,5 +82,14 @@ public class SendDataModel {
     public SendDataModel setFromWhichPersonID(String fromWhichPersonID) {
         this.fromWhichPersonID = fromWhichPersonID;
         return this;
+    }
+
+    public SendDataModel setToWhichPersonId(String toWhichPersonId) {
+        this.toWhichPersonId = toWhichPersonId;
+        return this;
+    }
+
+    public String getToWhichPersonId() {
+        return toWhichPersonId;
     }
 }
