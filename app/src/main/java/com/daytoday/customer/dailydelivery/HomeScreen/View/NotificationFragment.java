@@ -21,6 +21,7 @@ import com.daytoday.customer.dailydelivery.NotificationUI.NotificationAdapter;
 import com.daytoday.customer.dailydelivery.NotificationUI.NotificationViewModel;
 import com.daytoday.customer.dailydelivery.NotificationUI.NotificationViewModelFactory;
 import com.daytoday.customer.dailydelivery.R;
+import com.daytoday.customer.dailydelivery.Utilities.SaveOfflineManager;
 
 public class NotificationFragment extends Fragment {
 
@@ -41,7 +42,7 @@ public class NotificationFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         final NotificationAdapter notificationAdapter = new NotificationAdapter(getActivity());
 
-        viewModel = new ViewModelProvider(this, new NotificationViewModelFactory(getActivity().getApplication(), "1212")).get(NotificationViewModel.class);
+        viewModel = new ViewModelProvider(this, new NotificationViewModelFactory(getActivity().getApplication(), SaveOfflineManager.getUserId(getContext()))).get(NotificationViewModel.class);
         viewModel.pagedListLiveData.observe(getActivity(), new Observer<PagedList<Notification>>() {
             @Override
             public void onChanged(PagedList<Notification> notifications) {
