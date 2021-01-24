@@ -96,4 +96,11 @@ public interface ApiInterface {
 
     @GET("/v1/get-notification")
     Call<NotificationModelResponse> getNotifications(@QueryMap Map<String,String> map);
+
+    @GET("send-notification")
+    Call<YesNoResponse> sendNotification(@Query("to") String to ,
+                                         @Query("from") String from,
+                                         @Query("status") Integer status,
+                                         @Query("quantity") String quantity,
+                                         @Query("name") String name);
 }
