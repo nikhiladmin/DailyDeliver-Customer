@@ -2,6 +2,7 @@ package com.daytoday.customer.dailydelivery.Network;
 
 import com.daytoday.customer.dailydelivery.BuildConfig;
 import com.daytoday.customer.dailydelivery.Network.Response.*;
+import com.daytoday.customer.dailydelivery.NotificationUI.NotificationModelResponse;
 import com.daytoday.customer.dailydelivery.searchui.SearchResponseModel;
 
 import java.util.List;
@@ -93,6 +94,8 @@ public interface ApiInterface {
     @GET("login-cust")
     Call<AuthUserResponse> loginUser(@Query("custid") String custid);
 
+    @GET("/v1/get-notification")
+    Call<NotificationModelResponse> getNotifications(@QueryMap Map<String,String> map);
 
     @GET("send-notification")
     Call<YesNoResponse> sendNotification(@Query("to") String to ,
