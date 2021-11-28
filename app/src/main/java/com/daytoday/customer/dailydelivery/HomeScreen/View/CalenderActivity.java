@@ -1,11 +1,13 @@
 package com.daytoday.customer.dailydelivery.HomeScreen.View;
 
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -18,14 +20,24 @@ import com.daytoday.customer.dailydelivery.HomeScreen.Model.Transaction;
 import com.daytoday.customer.dailydelivery.HomeScreen.ViewModel.DatesViewModel;
 import com.daytoday.customer.dailydelivery.Network.ApiInterface;
 import com.daytoday.customer.dailydelivery.Network.Client;
+import com.daytoday.customer.dailydelivery.Network.Response.RequestNotification;
+import com.daytoday.customer.dailydelivery.Network.Response.SendDataModel;
 import com.daytoday.customer.dailydelivery.R;
 import com.daytoday.customer.dailydelivery.Utilities.AppUtils;
 import com.daytoday.customer.dailydelivery.Utilities.FirebaseUtils;
+import com.daytoday.customer.dailydelivery.Utilities.NotificationService;
 import com.daytoday.customer.dailydelivery.Utilities.RealtimeDatabase;
 import com.daytoday.customer.dailydelivery.Utilities.Request;
+import com.daytoday.customer.dailydelivery.Utilities.SaveOfflineManager;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
@@ -87,7 +99,25 @@ public class CalenderActivity extends AppCompatActivity {
                     calendarBottomSheet.setArguments(bundle);
                     calendarBottomSheet.show(getSupportFragmentManager(), "CalendarActivity");
                 } else {
-                    Snackbar.make(findViewById(android.R.id.content).getRootView(), "No transaction found on this date!", Snackbar.LENGTH_LONG).show();
+                    //Snackbar.make(findViewById(android.R.id.content).getRootView(), "No transaction found on this date!", Snackbar.LENGTH_LONG).show();
+
+                    MaterialAlertDialogBuilder alertDialog = new MaterialAlertDialogBuilder(this);
+                    alertDialog.setMessage("Do you want to request for this item?");
+                    alertDialog.setTitle("Send Request?");
+                    alertDialog.setCancelable(false);
+                    alertDialog.setPositiveButton("Request", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //TODO add Request here
+                            createPendingRequest(date, "1");
+                        }
+                    });
+                    alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Snackbar.make(findViewById(android.R.id.content), "Profile Update Cancelled", Snackbar.LENGTH_SHORT).show();
+                        }
+                    }).show();
                 }
             }
         });
@@ -140,7 +170,7 @@ public class CalenderActivity extends AppCompatActivity {
             if (currentProduct != null && !currentProduct.getdOrM().isEmpty() && currentProduct.getdOrM().equals("D")) {
                 int thisYearPrice = Integer.parseInt(s != null ? s : "0");
                 int singleProductPrice = currentProduct.getPrice();
-                totalPriceTextView.setText("₹"+(thisYearPrice*singleProductPrice));
+                totalPriceTextView.setText("₹" + (thisYearPrice * singleProductPrice));
             }
             totalAccepted.setText("" + s);
         });
@@ -175,5 +205,29 @@ public class CalenderActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    //modifications
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void createPendingRequest(CalendarDay day, String quantity) {
+        Log.e("TAG",""+bussCustId+" "+day.toString()+" "+quantity);
+        DatabaseReference reference = RealtimeDatabase.getInstance().getReference().child("Buss_Cust_DayWise").child(bussCustId);
+        HashMap<String, String> value = FirebaseUtils.getValueMapOfRequest(day, quantity, Request.PENDING);
+        reference.child(FirebaseUtils.getDatePath(day))
+                .setValue(value);
+        FirebaseUtils.incrementAccToReq(day, reference, quantity, Request.PENDING);
+
+        RequestNotification requestNotification = new RequestNotification()
+                .setToken(SaveOfflineManager.getFireBaseToken(this))
+                .setSendDataModel(new SendDataModel()
+                        .setFromWhichPerson(SaveOfflineManager.getUserName(this))
+                        .setFromWhichPersonID(SaveOfflineManager.getUserId(this))
+                        .setNotificationStatus(Request.PENDING)
+                        .setProductName(currentProduct.getName())
+                        .setQuantity(quantity)
+                        .setToWhichPerson(SaveOfflineManager.getUserName(this))
+                        .setToWhichPersonId(custID));
+        NotificationService.sendNotification(requestNotification);
     }
 }
